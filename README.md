@@ -105,7 +105,9 @@ This is a guidance tool for law enforcement agencies. Contributions should focus
 
 ## License
 
-[Add appropriate license]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+**Important**: This software is a guidance tool only and does not constitute official CJIS compliance certification.
 
 ## Contact
 
