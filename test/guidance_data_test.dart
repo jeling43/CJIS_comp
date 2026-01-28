@@ -60,7 +60,7 @@ void main() {
           final hasNext = option.nextQuestionId != null;
           expect(hasResult || hasNext, isTrue,
               reason:
-                  'Answer option should have either result or nextQuestionId');
+                  'Answer option "${option.text}" in question "${question.question}" should have either result or nextQuestionId');
         }
       }
     });

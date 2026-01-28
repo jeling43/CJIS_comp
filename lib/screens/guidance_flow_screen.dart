@@ -18,7 +18,15 @@ class _GuidanceFlowScreenState extends State<GuidanceFlowScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    categoryId = ModalRoute.of(context)!.settings.arguments as String;
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args == null || args is! String) {
+      // If no arguments or invalid type, navigate back
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pop();
+      });
+      return;
+    }
+    categoryId = args;
     questions = GuidanceData.getQuestionsForCategory(categoryId) ?? [];
   }
 

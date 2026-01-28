@@ -7,7 +7,18 @@ class CategoryDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categoryId = ModalRoute.of(context)!.settings.arguments as String;
+    final args = ModalRoute.of(context)?.settings.arguments;
+    
+    if (args == null || args is! String) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Error')),
+        body: const Center(
+          child: Text('Invalid category. Please go back and try again.'),
+        ),
+      );
+    }
+    
+    final categoryId = args;
     final category = GuidanceData.getCategoryById(categoryId);
 
     if (category == null) {
