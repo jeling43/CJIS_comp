@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import '../data/guidance_data.dart';
 import '../models/guidance_models.dart';
+import '../widgets/policy_reference_panel.dart';
+import '../widgets/risk_context_panel.dart';
+import '../widgets/common_failure_patterns_panel.dart';
+import '../widgets/priority_guidance_panel.dart';
+import '../widgets/compliance_disclaimer_banner.dart';
 
 class CategoryDetailScreen extends StatelessWidget {
   const CategoryDetailScreen({super.key});
@@ -45,6 +50,9 @@ class CategoryDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Compliance Disclaimer at the top
+                  const ComplianceDisclaimerBanner(),
+                  const SizedBox(height: 24),
                   Card(
                     elevation: 4,
                     child: Padding(
@@ -149,6 +157,26 @@ class CategoryDetailScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 24),
+                  // CJIS Policy Reference Panel
+                  PolicyReferencePanel(
+                    references: category.cjisPolicyReferences,
+                  ),
+                  const SizedBox(height: 24),
+                  // Risk Context Panel
+                  RiskContextPanel(
+                    riskContext: category.riskContext,
+                  ),
+                  const SizedBox(height: 24),
+                  // Common Failure Patterns Panel
+                  CommonFailurePatternsPanel(
+                    patterns: category.commonFailures,
+                  ),
+                  const SizedBox(height: 24),
+                  // Priority Guidance Panel
+                  PriorityGuidancePanel(
+                    guidance: category.priorityGuidance,
                   ),
                   const SizedBox(height: 32),
                   if (hasQuestions) ...[
