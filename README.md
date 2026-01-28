@@ -16,6 +16,12 @@ This application is a **guidance and decision-support tool only**. It is NOT an 
   - User Roles and Least Privilege
   - Cloud and Vendor Considerations
   - Training and Personnel Security
+- **CJIS Policy Mapping**: Each category includes:
+  - **Policy Reference Panel**: Displays CJIS Security Policy section numbers with plain-language interpretations (informational only, not verbatim quotes)
+  - **Risk Context Panel**: Collapsible section explaining cybersecurity and compliance risks if requirements are ignored
+  - **Common Failure Patterns**: List of misconfigurations and procedural issues commonly seen in small agencies
+  - **Priority Guidance**: High-level risk assessment without numeric scores (higher risk when / lower risk when)
+  - **Compliance Disclaimer**: Persistent reminder that this tool does not determine CJIS compliance
 - **Decision-Guided Navigation**: Question-based flow with tailored guidance
 - **Risk-Oriented Output**: Plain-language explanations with CJIS policy references
 - **Responsive Design**: Works on desktop and tablet devices
@@ -70,15 +76,20 @@ lib/
 ├── main.dart                 # Application entry point
 ├── app.dart                  # Main app configuration and routing
 ├── models/                   # Data models
-│   └── guidance_models.dart
+│   └── guidance_models.dart  # GuidanceCategory, CJISPolicyReference, RiskContext, etc.
 ├── data/                     # Static data and content
-│   └── guidance_data.dart
+│   └── guidance_data.dart    # Category data with CJIS mappings and risk context
 ├── screens/                  # Screen widgets
 │   ├── disclaimer_screen.dart
 │   ├── categories_screen.dart
-│   ├── category_detail_screen.dart
+│   ├── category_detail_screen.dart  # Enhanced with CJIS mapping panels
 │   └── guidance_flow_screen.dart
-└── widgets/                  # Reusable UI components (future)
+└── widgets/                  # Reusable UI components
+    ├── policy_reference_panel.dart
+    ├── risk_context_panel.dart
+    ├── common_failure_patterns_panel.dart
+    ├── priority_guidance_panel.dart
+    └── compliance_disclaimer_banner.dart
 ```
 
 ## Usage
