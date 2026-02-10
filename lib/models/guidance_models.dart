@@ -42,6 +42,36 @@ class PriorityGuidance {
   });
 }
 
+/// Represents a section of guided prompts with a topic and related questions
+class GuidedPromptSection {
+  final String title;
+  final List<String> questions;
+  final String? context;
+
+  const GuidedPromptSection({
+    required this.title,
+    required this.questions,
+    this.context,
+  });
+}
+
+/// Represents a collection of guided prompts for discovery and self-assessment
+class GuidedPrompts {
+  final String introduction;
+  final List<GuidedPromptSection> sections;
+  final List<String> higherRiskSituations;
+  final List<String> lowerRiskSituations;
+  final List<String> policySections;
+
+  const GuidedPrompts({
+    required this.introduction,
+    required this.sections,
+    required this.higherRiskSituations,
+    required this.lowerRiskSituations,
+    required this.policySections,
+  });
+}
+
 class GuidanceCategory {
   final String id;
   final String title;
@@ -55,6 +85,9 @@ class GuidanceCategory {
   final RiskContext riskContext;
   final List<CommonFailurePattern> commonFailures;
   final PriorityGuidance priorityGuidance;
+  
+  // Optional guided prompts for self-assessment
+  final GuidedPrompts? guidedPrompts;
 
   const GuidanceCategory({
     required this.id,
@@ -67,6 +100,7 @@ class GuidanceCategory {
     required this.riskContext,
     this.commonFailures = const [],
     required this.priorityGuidance,
+    this.guidedPrompts,
   });
 }
 
