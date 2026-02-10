@@ -49,7 +49,7 @@ class GuidanceCategory {
   final String icon;
   final List<String> keyPoints;
   final String? policyReference;
-  
+
   // New fields for CJIS mapping and risk context
   final List<CJISPolicyReference> cjisPolicyReferences;
   final RiskContext riskContext;

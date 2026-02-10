@@ -43,8 +43,7 @@ void main() {
 
       // Check at least one description is visible
       expect(
-        find.textContaining(
-            'Guidelines for managing and controlling access'),
+        find.textContaining('Guidelines for managing and controlling access'),
         findsOneWidget,
       );
     });

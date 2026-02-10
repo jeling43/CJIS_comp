@@ -5,7 +5,8 @@ class GuidanceData {
     const GuidanceCategory(
       id: 'access_control',
       title: 'Access Control',
-      description: 'Guidelines for managing and controlling access to CJIS systems and data',
+      description:
+          'Guidelines for managing and controlling access to CJIS systems and data',
       icon: '🔐',
       keyPoints: [
         'Implement role-based access control',
@@ -17,11 +18,13 @@ class GuidanceData {
       cjisPolicyReferences: [
         CJISPolicyReference(
           sectionNumber: '5.2',
-          plainLanguageInterpretation: 'Access Control requires agencies to limit system and data access to authorized users only, implement role-based permissions, and regularly review who has access to what.',
+          plainLanguageInterpretation:
+              'Access Control requires agencies to limit system and data access to authorized users only, implement role-based permissions, and regularly review who has access to what.',
         ),
         CJISPolicyReference(
           sectionNumber: '5.2.1',
-          plainLanguageInterpretation: 'Identification and Authentication ensures each user has a unique identifier and proper authentication before accessing CJIS systems.',
+          plainLanguageInterpretation:
+              'Identification and Authentication ensures each user has a unique identifier and proper authentication before accessing CJIS systems.',
         ),
       ],
       riskContext: RiskContext(
@@ -36,30 +39,37 @@ class GuidanceData {
       commonFailures: [
         CommonFailurePattern(
           pattern: 'Shared accounts',
-          description: 'Multiple users sharing a single login defeats accountability and audit trails',
+          description:
+              'Multiple users sharing a single login defeats accountability and audit trails',
         ),
         CommonFailurePattern(
           pattern: 'Orphaned accounts',
-          description: 'Former employees or transferred staff retaining system access',
+          description:
+              'Former employees or transferred staff retaining system access',
         ),
         CommonFailurePattern(
           pattern: 'Over-provisioned permissions',
-          description: 'Users having broader access than needed for their job functions',
+          description:
+              'Users having broader access than needed for their job functions',
         ),
         CommonFailurePattern(
           pattern: 'Infrequent access reviews',
-          description: 'Failing to periodically verify that user access remains appropriate',
+          description:
+              'Failing to periodically verify that user access remains appropriate',
         ),
       ],
       priorityGuidance: PriorityGuidance(
-        higherRiskWhen: 'Your agency has high staff turnover, uses contractor personnel, or has interconnected systems with multiple access points',
-        lowerRiskWhen: 'You have a stable workforce, clear role definitions, and automated access management tools',
+        higherRiskWhen:
+            'Your agency has high staff turnover, uses contractor personnel, or has interconnected systems with multiple access points',
+        lowerRiskWhen:
+            'You have a stable workforce, clear role definitions, and automated access management tools',
       ),
     ),
     const GuidanceCategory(
       id: 'authentication_mfa',
       title: 'Authentication and MFA',
-      description: 'Multi-factor authentication requirements and best practices',
+      description:
+          'Multi-factor authentication requirements and best practices',
       icon: '🔑',
       keyPoints: [
         'Two-factor authentication required',
@@ -71,11 +81,13 @@ class GuidanceData {
       cjisPolicyReferences: [
         CJISPolicyReference(
           sectionNumber: '5.6',
-          plainLanguageInterpretation: 'Advanced Authentication (AA) mandates multi-factor authentication for all access to CJIS systems, combining something you know (password) with something you have (token) or something you are (biometric).',
+          plainLanguageInterpretation:
+              'Advanced Authentication (AA) mandates multi-factor authentication for all access to CJIS systems, combining something you know (password) with something you have (token) or something you are (biometric).',
         ),
         CJISPolicyReference(
           sectionNumber: '5.6.2.2',
-          plainLanguageInterpretation: 'Specifies acceptable authentication factors including hardware tokens, software tokens, biometrics, and out-of-band authentication methods.',
+          plainLanguageInterpretation:
+              'Specifies acceptable authentication factors including hardware tokens, software tokens, biometrics, and out-of-band authentication methods.',
         ),
       ],
       riskContext: RiskContext(
@@ -90,24 +102,30 @@ class GuidanceData {
       commonFailures: [
         CommonFailurePattern(
           pattern: 'MFA only for remote access',
-          description: 'Implementing MFA for VPN users but not for local network access',
+          description:
+              'Implementing MFA for VPN users but not for local network access',
         ),
         CommonFailurePattern(
           pattern: 'Weak second factors',
-          description: 'Relying solely on SMS codes which are vulnerable to SIM swapping attacks',
+          description:
+              'Relying solely on SMS codes which are vulnerable to SIM swapping attacks',
         ),
         CommonFailurePattern(
           pattern: 'MFA fatigue attacks',
-          description: 'Lack of rate limiting on MFA prompts allowing attackers to spam users until they approve',
+          description:
+              'Lack of rate limiting on MFA prompts allowing attackers to spam users until they approve',
         ),
         CommonFailurePattern(
           pattern: 'No backup authentication',
-          description: 'Failing to provide secure backup methods when primary MFA device is unavailable',
+          description:
+              'Failing to provide secure backup methods when primary MFA device is unavailable',
         ),
       ],
       priorityGuidance: PriorityGuidance(
-        higherRiskWhen: 'Your agency allows remote access, has interconnected systems, or has experienced password-related security incidents',
-        lowerRiskWhen: 'You have implemented hardware tokens or biometric authentication with proper backup procedures',
+        higherRiskWhen:
+            'Your agency allows remote access, has interconnected systems, or has experienced password-related security incidents',
+        lowerRiskWhen:
+            'You have implemented hardware tokens or biometric authentication with proper backup procedures',
       ),
     ),
     const GuidanceCategory(
@@ -125,11 +143,13 @@ class GuidanceData {
       cjisPolicyReferences: [
         CJISPolicyReference(
           sectionNumber: '5.10',
-          plainLanguageInterpretation: 'Information Exchange requires encryption of CJIS data in transit using TLS 1.2 or higher, protecting data as it moves between systems or across networks.',
+          plainLanguageInterpretation:
+              'Information Exchange requires encryption of CJIS data in transit using TLS 1.2 or higher, protecting data as it moves between systems or across networks.',
         ),
         CJISPolicyReference(
           sectionNumber: '5.10.1.2',
-          plainLanguageInterpretation: 'Specifies encryption standards for data at rest, requiring FIPS 140-2 validated encryption modules when storing CJIS data.',
+          plainLanguageInterpretation:
+              'Specifies encryption standards for data at rest, requiring FIPS 140-2 validated encryption modules when storing CJIS data.',
         ),
       ],
       riskContext: RiskContext(
@@ -144,7 +164,8 @@ class GuidanceData {
       commonFailures: [
         CommonFailurePattern(
           pattern: 'Unencrypted backup media',
-          description: 'Database backups stored on tapes or drives without encryption',
+          description:
+              'Database backups stored on tapes or drives without encryption',
         ),
         CommonFailurePattern(
           pattern: 'Outdated TLS versions',
@@ -152,16 +173,20 @@ class GuidanceData {
         ),
         CommonFailurePattern(
           pattern: 'Keys stored with encrypted data',
-          description: 'Encryption keys stored on the same system as the encrypted data',
+          description:
+              'Encryption keys stored on the same system as the encrypted data',
         ),
         CommonFailurePattern(
           pattern: 'No encryption for mobile devices',
-          description: 'Laptops, tablets, or mobile devices containing CJIS data without full-disk encryption',
+          description:
+              'Laptops, tablets, or mobile devices containing CJIS data without full-disk encryption',
         ),
       ],
       priorityGuidance: PriorityGuidance(
-        higherRiskWhen: 'Your agency uses mobile devices, creates frequent backups, or exchanges data with multiple external agencies',
-        lowerRiskWhen: 'All storage is encrypted, you use centralized key management, and have documented encryption procedures',
+        higherRiskWhen:
+            'Your agency uses mobile devices, creates frequent backups, or exchanges data with multiple external agencies',
+        lowerRiskWhen:
+            'All storage is encrypted, you use centralized key management, and have documented encryption procedures',
       ),
     ),
     const GuidanceCategory(
@@ -179,11 +204,13 @@ class GuidanceData {
       cjisPolicyReferences: [
         CJISPolicyReference(
           sectionNumber: '5.2.1',
-          plainLanguageInterpretation: 'Identification and Authentication requires unique user accounts and ensures users only have access to the information and functions they need for their specific job duties.',
+          plainLanguageInterpretation:
+              'Identification and Authentication requires unique user accounts and ensures users only have access to the information and functions they need for their specific job duties.',
         ),
         CJISPolicyReference(
           sectionNumber: '5.2.2',
-          plainLanguageInterpretation: 'Password Policy establishes minimum standards for password strength and management tied to user roles and responsibilities.',
+          plainLanguageInterpretation:
+              'Password Policy establishes minimum standards for password strength and management tied to user roles and responsibilities.',
         ),
       ],
       riskContext: RiskContext(
@@ -198,24 +225,30 @@ class GuidanceData {
       commonFailures: [
         CommonFailurePattern(
           pattern: 'Admin rights for everyone',
-          description: 'Granting administrative privileges to users who only need standard access',
+          description:
+              'Granting administrative privileges to users who only need standard access',
         ),
         CommonFailurePattern(
           pattern: 'Role accumulation',
-          description: 'Users accumulating permissions over time as they change positions without revoking old access',
+          description:
+              'Users accumulating permissions over time as they change positions without revoking old access',
         ),
         CommonFailurePattern(
           pattern: 'No separation of critical functions',
-          description: 'Same person able to both create and approve sensitive actions',
+          description:
+              'Same person able to both create and approve sensitive actions',
         ),
         CommonFailurePattern(
           pattern: 'Generic role definitions',
-          description: 'Overly broad roles like "Officer" that don\'t distinguish between different functional needs',
+          description:
+              'Overly broad roles like "Officer" that don\'t distinguish between different functional needs',
         ),
       ],
       priorityGuidance: PriorityGuidance(
-        higherRiskWhen: 'Your agency has complex workflows, multiple job functions, or shared systems with other departments',
-        lowerRiskWhen: 'Roles are well-documented, regularly reviewed, and aligned with specific job functions',
+        higherRiskWhen:
+            'Your agency has complex workflows, multiple job functions, or shared systems with other departments',
+        lowerRiskWhen:
+            'Roles are well-documented, regularly reviewed, and aligned with specific job functions',
       ),
     ),
     const GuidanceCategory(
@@ -233,11 +266,13 @@ class GuidanceData {
       cjisPolicyReferences: [
         CJISPolicyReference(
           sectionNumber: '5.14',
-          plainLanguageInterpretation: 'Private Contractor/Non-Criminal Justice Agency (NCJ) requires agencies to ensure all vendors, contractors, and cloud service providers handling CJIS data meet the same security standards as law enforcement agencies.',
+          plainLanguageInterpretation:
+              'Private Contractor/Non-Criminal Justice Agency (NCJ) requires agencies to ensure all vendors, contractors, and cloud service providers handling CJIS data meet the same security standards as law enforcement agencies.',
         ),
         CJISPolicyReference(
           sectionNumber: '5.14.1.1',
-          plainLanguageInterpretation: 'Cloud service providers must be FBI CJIS approved and have a signed CJIS Security Addendum documenting their compliance obligations.',
+          plainLanguageInterpretation:
+              'Cloud service providers must be FBI CJIS approved and have a signed CJIS Security Addendum documenting their compliance obligations.',
         ),
       ],
       riskContext: RiskContext(
@@ -252,24 +287,30 @@ class GuidanceData {
       commonFailures: [
         CommonFailurePattern(
           pattern: 'Consumer cloud services',
-          description: 'Using Dropbox, Google Drive, or similar services for CJIS data without FBI approval',
+          description:
+              'Using Dropbox, Google Drive, or similar services for CJIS data without FBI approval',
         ),
         CommonFailurePattern(
           pattern: 'Missing security addendum',
-          description: 'Contracting with vendors without executing the required CJIS Security Addendum',
+          description:
+              'Contracting with vendors without executing the required CJIS Security Addendum',
         ),
         CommonFailurePattern(
           pattern: 'Incomplete vendor vetting',
-          description: 'Not verifying vendor employee background checks and security training',
+          description:
+              'Not verifying vendor employee background checks and security training',
         ),
         CommonFailurePattern(
           pattern: 'Third-party integrations',
-          description: 'Allowing software plugins or integrations that access CJIS data without proper evaluation',
+          description:
+              'Allowing software plugins or integrations that access CJIS data without proper evaluation',
         ),
       ],
       priorityGuidance: PriorityGuidance(
-        higherRiskWhen: 'Your agency relies on cloud services, uses many third-party applications, or has limited in-house IT resources',
-        lowerRiskWhen: 'You maintain an approved vendor list, have documented evaluation processes, and regularly audit vendor compliance',
+        higherRiskWhen:
+            'Your agency relies on cloud services, uses many third-party applications, or has limited in-house IT resources',
+        lowerRiskWhen:
+            'You maintain an approved vendor list, have documented evaluation processes, and regularly audit vendor compliance',
       ),
     ),
     const GuidanceCategory(
@@ -287,15 +328,18 @@ class GuidanceData {
       cjisPolicyReferences: [
         CJISPolicyReference(
           sectionNumber: '5.1',
-          plainLanguageInterpretation: 'Information Exchange Agreements and Interconnection Security Agreements establish responsibilities for training personnel who access CJIS systems.',
+          plainLanguageInterpretation:
+              'Information Exchange Agreements and Interconnection Security Agreements establish responsibilities for training personnel who access CJIS systems.',
         ),
         CJISPolicyReference(
           sectionNumber: '5.5',
-          plainLanguageInterpretation: 'Security Awareness Training requires annual training for all personnel with access to CJIS data on security policies, procedures, and their responsibilities.',
+          plainLanguageInterpretation:
+              'Security Awareness Training requires annual training for all personnel with access to CJIS data on security policies, procedures, and their responsibilities.',
         ),
         CJISPolicyReference(
           sectionNumber: '5.12',
-          plainLanguageInterpretation: 'Personnel Security outlines background check requirements and ongoing security vetting for anyone with access to CJIS systems.',
+          plainLanguageInterpretation:
+              'Personnel Security outlines background check requirements and ongoing security vetting for anyone with access to CJIS systems.',
         ),
       ],
       riskContext: RiskContext(
@@ -310,24 +354,30 @@ class GuidanceData {
       commonFailures: [
         CommonFailurePattern(
           pattern: 'One-time training only',
-          description: 'Providing training during onboarding but not conducting required annual refresher training',
+          description:
+              'Providing training during onboarding but not conducting required annual refresher training',
         ),
         CommonFailurePattern(
           pattern: 'Generic security training',
-          description: 'Using general security training instead of CJIS-specific content',
+          description:
+              'Using general security training instead of CJIS-specific content',
         ),
         CommonFailurePattern(
           pattern: 'Incomplete background checks',
-          description: 'Not conducting fingerprint-based background checks for all personnel with CJIS access',
+          description:
+              'Not conducting fingerprint-based background checks for all personnel with CJIS access',
         ),
         CommonFailurePattern(
           pattern: 'No training documentation',
-          description: 'Failing to document who completed training and when, making audit compliance difficult',
+          description:
+              'Failing to document who completed training and when, making audit compliance difficult',
         ),
       ],
       priorityGuidance: PriorityGuidance(
-        higherRiskWhen: 'Your agency has high staff turnover, uses contractors or part-time personnel, or has experienced security incidents',
-        lowerRiskWhen: 'You have formalized training programs, documented completion tracking, and regular reinforcement of security practices',
+        higherRiskWhen:
+            'Your agency has high staff turnover, uses contractors or part-time personnel, or has experienced security incidents',
+        lowerRiskWhen:
+            'You have formalized training programs, documented completion tracking, and regular reinforcement of security practices',
       ),
     ),
   ];
@@ -336,7 +386,8 @@ class GuidanceData {
     'access_control': [
       const GuidanceQuestion(
         id: 'ac_q1',
-        question: 'Does your organization have documented access control policies?',
+        question:
+            'Does your organization have documented access control policies?',
         options: [
           AnswerOption(
             text: 'Yes, fully documented and current',

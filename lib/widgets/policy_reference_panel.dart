@@ -43,7 +43,10 @@ class PolicyReferencePanel extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+                color: Theme.of(context)
+                    .colorScheme
+                    .surfaceVariant
+                    .withOpacity(0.5),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
@@ -71,34 +74,38 @@ class PolicyReferencePanel extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             ...references.map((reference) => Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      'Section ${reference.sectionNumber}',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.onPrimaryContainer,
-                          ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    reference.plainLanguageInterpretation,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          height: 1.5,
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(6),
                         ),
+                        child: Text(
+                          'Section ${reference.sectionNumber}',
+                          style:
+                              Theme.of(context).textTheme.titleSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        reference.plainLanguageInterpretation,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              height: 1.5,
+                            ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )),
+                )),
           ],
         ),
       ),

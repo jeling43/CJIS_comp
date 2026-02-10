@@ -13,7 +13,7 @@ class CategoryDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)?.settings.arguments;
-    
+
     if (args == null || args is! String) {
       return Scaffold(
         appBar: AppBar(title: const Text('Error')),
@@ -22,7 +22,7 @@ class CategoryDetailScreen extends StatelessWidget {
         ),
       );
     }
-    
+
     final categoryId = args;
     final category = GuidanceData.getCategoryById(categoryId);
 
@@ -181,8 +181,10 @@ class CategoryDetailScreen extends StatelessWidget {
                   const SizedBox(height: 32),
                   if (hasQuestions) ...[
                     Card(
-                      color:
-                          Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primaryContainer
+                          .withOpacity(0.5),
                       child: Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: Column(

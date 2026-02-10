@@ -67,27 +67,30 @@ class _RiskContextPanelState extends State<RiskContextPanel> {
                   const Divider(),
                   const SizedBox(height: 12),
                   ...widget.riskContext.riskPoints.map((point) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.error_outline,
-                          color: Theme.of(context).colorScheme.error,
-                          size: 20,
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              color: Theme.of(context).colorScheme.error,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                point,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      height: 1.5,
+                                    ),
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            point,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  height: 1.5,
-                                ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )),
+                      )),
                 ],
               ),
             ),

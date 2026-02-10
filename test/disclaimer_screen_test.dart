@@ -65,8 +65,7 @@ void main() {
       );
 
       expect(find.text('I Understand - Continue'), findsOneWidget);
-      expect(
-          find.widgetWithText(ElevatedButton, 'I Understand - Continue'),
+      expect(find.widgetWithText(ElevatedButton, 'I Understand - Continue'),
           findsOneWidget);
     });
 

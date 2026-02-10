@@ -157,7 +157,9 @@ class _CategoryCard extends StatelessWidget {
                   child: Text(
                     category.policyReference!,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSecondaryContainer,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
                         ),
                   ),
                 ),

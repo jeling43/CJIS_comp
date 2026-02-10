@@ -72,9 +72,7 @@ class _GuidanceFlowScreenState extends State<GuidanceFlowScreen> {
         title: Text(category?.title ?? 'Guidance'),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
-      body: result != null
-          ? _buildResultView()
-          : _buildQuestionView(),
+      body: result != null ? _buildResultView() : _buildQuestionView(),
     );
   }
 
@@ -254,12 +252,10 @@ class _GuidanceFlowScreenState extends State<GuidanceFlowScreen> {
                       children: [
                         Text(
                           'Assessment',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                         const SizedBox(height: 12),
                         Text(
