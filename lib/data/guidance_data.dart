@@ -64,6 +64,105 @@ class GuidanceData {
         lowerRiskWhen:
             'You have a stable workforce, clear role definitions, and automated access management tools',
       ),
+      guidedPrompts: GuidedPrompts(
+        introduction:
+            'These plain-language questions help you understand how access to CJIS systems works in practice. Questions are designed to surface assumptions, clarify responsibility, and highlight common risk areas without requiring technical knowledge. There are no right or wrong answers. "Not sure" is a valid response and often indicates an area that may need follow-up.',
+        sections: [
+          GuidedPromptSection(
+            title: 'Who uses CJIS systems',
+            questions: [
+              'Who in your agency uses CJIS systems as part of their job?',
+              'Are there people who still have CJIS access but rarely need it?',
+              'If someone\'s job changed, would their CJIS access change automatically?',
+            ],
+            context: 'If you\'re unsure, that\'s useful to know.',
+          ),
+          GuidedPromptSection(
+            title: 'Individual access vs shared access',
+            questions: [
+              'Does each person use their own login to access CJIS systems?',
+              'Are shared logins ever used to save time during busy periods?',
+              'If something went wrong, could you tell which person accessed CJIS data?',
+            ],
+            context: 'Shared access is common in small agencies. These questions help clarify how access is actually used.',
+          ),
+          GuidedPromptSection(
+            title: 'How people get to CJIS systems',
+            questions: [
+              'Do people access CJIS systems only from inside the building, or also from home or remotely?',
+              'Once someone is connected, can they reach CJIS systems right away?',
+              'If someone can access email or reports, does that same access allow them to reach CJIS systems?',
+            ],
+            context: 'If the answer depends on the situation, that\'s worth exploring further.',
+          ),
+          GuidedPromptSection(
+            title: 'Booking and records computers',
+            questions: [
+              'Is there a computer used for booking or records that accesses CJIS data?',
+              'Can that same computer also be used to browse the internet or check email?',
+              'Is that computer shared by more than one person?',
+            ],
+            context: 'Mixed-use computers are common and can create access paths people don\'t always think about.',
+          ),
+          GuidedPromptSection(
+            title: 'Shared printers and other devices',
+            questions: [
+              'Is the printer used for CJIS-related work shared with other computers?',
+              'Can computers that do not access CJIS data send jobs to that printer?',
+              'Are scanners, shared folders, or other tools connected to CJIS computers also used elsewhere?',
+            ],
+            context: 'Shared devices can connect systems in ways that aren\'t obvious.',
+          ),
+          GuidedPromptSection(
+            title: 'Other access paths',
+            questions: [
+              'Can another computer connect to a CJIS computer to help with troubleshooting or support?',
+              'Are there tools that allow remote access to CJIS computers?',
+              'If another computer on the network had a problem, could it reach CJIS systems?',
+            ],
+            context: 'These questions help identify access paths that exist for convenience.',
+          ),
+          GuidedPromptSection(
+            title: 'Who is responsible',
+            questions: [
+              'Who decides which people or systems are allowed to access CJIS systems?',
+              'Is that decision made by your agency, central IT, a vendor, or more than one group?',
+              'If something needed to change, would you know who to contact?',
+            ],
+            context: 'Unclear responsibility is common and important to identify.',
+          ),
+          GuidedPromptSection(
+            title: 'When access should change',
+            questions: [
+              'What happens to CJIS access when someone changes roles?',
+              'What happens when someone leaves the agency?',
+              'How quickly would access be removed?',
+            ],
+            context: 'Delays often happen when responsibility is unclear.',
+          ),
+          GuidedPromptSection(
+            title: 'Consistency check',
+            questions: [
+              'If you asked three different people these questions, would you expect the same answers?',
+              'Are these answers written down anywhere, or based on how things have always worked?',
+            ],
+            context: 'Different answers often point to hidden risk.',
+          ),
+        ],
+        higherRiskSituations: [
+          'CJIS computers used for general browsing or email',
+          'Shared printers or devices connecting CJIS and non-CJIS systems',
+          'Access rules that are assumed rather than confirmed',
+          'Responsibility split across teams without clear ownership',
+        ],
+        lowerRiskSituations: [
+          'CJIS access limited to specific roles and systems',
+          'Shared devices intentionally restricted or reviewed',
+          'Clear understanding of who controls access decisions',
+          'Access changes handled consistently and promptly',
+        ],
+        policySections: ['5.5', '5.6', '5.10'],
+      ),
     ),
     const GuidanceCategory(
       id: 'authentication_mfa',

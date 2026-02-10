@@ -6,6 +6,7 @@ import '../widgets/risk_context_panel.dart';
 import '../widgets/common_failure_patterns_panel.dart';
 import '../widgets/priority_guidance_panel.dart';
 import '../widgets/compliance_disclaimer_banner.dart';
+import '../widgets/guided_prompts_panel.dart';
 
 class CategoryDetailScreen extends StatelessWidget {
   const CategoryDetailScreen({super.key});
@@ -178,7 +179,15 @@ class CategoryDetailScreen extends StatelessWidget {
                   PriorityGuidancePanel(
                     guidance: category.priorityGuidance,
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
+                  // Guided Prompts Panel (if available)
+                  if (category.guidedPrompts != null) ...[
+                    GuidedPromptsPanel(
+                      prompts: category.guidedPrompts!,
+                    ),
+                    const SizedBox(height: 24),
+                  ],
+                  const SizedBox(height: 8),
                   if (hasQuestions) ...[
                     Card(
                       color: Theme.of(context)
