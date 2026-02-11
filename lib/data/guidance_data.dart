@@ -226,6 +226,65 @@ class GuidanceData {
         lowerRiskWhen:
             'You have implemented hardware tokens or biometric authentication with proper backup procedures',
       ),
+      guidedPrompts: GuidedPrompts(
+        introduction:
+            'These questions help you think through how people prove who they are when accessing CJIS systems. There are no right or wrong answers. "Not sure" is a valid response and often highlights an area worth exploring with IT or leadership.',
+        sections: [
+          GuidedPromptSection(
+            title: 'How people log in',
+            questions: [
+              'When someone logs into a CJIS system, do they use just a password, or is there an extra step like a code or card?',
+              'If you\'re not sure whether there\'s an extra step, who would you ask to find out?',
+            ],
+            context: 'An extra step beyond a password is often called multi-factor authentication. If you\'re unsure what\'s in place, that\'s worth clarifying.',
+          ),
+          GuidedPromptSection(
+            title: 'Logging in from different places',
+            questions: [
+              'Does logging in work the same way whether someone is at the office or working from home?',
+              'If there\'s a difference, do you know why?',
+            ],
+            context: 'Sometimes extra security is only used remotely. Understanding the difference helps clarify what\'s protected.',
+          ),
+          GuidedPromptSection(
+            title: 'When the usual method doesn\'t work',
+            questions: [
+              'If someone loses their phone or card, how do they get back into the system?',
+              'Has this situation come up before, and how was it handled?',
+            ],
+            context: 'Backup options are important. If there\'s no clear process, access could be delayed—or shortcuts might be used.',
+          ),
+          GuidedPromptSection(
+            title: 'Passwords and updates',
+            questions: [
+              'Are people asked to change their password regularly, or do passwords stay the same for a long time?',
+              'If someone forgot their password, how would they reset it?',
+            ],
+            context: 'Password habits can affect security. If passwords rarely change or resets are informal, that\'s useful to know.',
+          ),
+          GuidedPromptSection(
+            title: 'Who manages authentication',
+            questions: [
+              'Who decides how logins work—your agency, central IT, or a vendor?',
+              'If you wanted to change how logins work, would you know who to contact?',
+            ],
+            context: 'Knowing who controls authentication helps when questions or changes come up.',
+          ),
+        ],
+        higherRiskSituations: [
+          'Only a password is used to access CJIS systems',
+          'Remote access works differently from in-office access with no clear reason',
+          'No backup plan exists when the usual login method fails',
+          'Passwords rarely change or are shared among staff',
+        ],
+        lowerRiskSituations: [
+          'An extra step like a code or card is required for all logins',
+          'There\'s a clear backup process if someone can\'t log in the usual way',
+          'Password changes happen regularly and resets follow a defined process',
+          'There\'s a clear understanding of who manages login security',
+        ],
+        policySections: ['5.6', '5.6.2.2'],
+      ),
     ),
     const GuidanceCategory(
       id: 'data_storage',
@@ -286,6 +345,65 @@ class GuidanceData {
             'Your agency uses mobile devices, creates frequent backups, or exchanges data with multiple external agencies',
         lowerRiskWhen:
             'All storage is encrypted, you use centralized key management, and have documented encryption procedures',
+      ),
+      guidedPrompts: GuidedPrompts(
+        introduction:
+            'These questions help you think through how CJIS data is stored and protected. There are no right or wrong answers. "Not sure" is a valid response and often indicates an area worth discussing with IT.',
+        sections: [
+          GuidedPromptSection(
+            title: 'Where data is stored',
+            questions: [
+              'Do you know where CJIS data is stored—on local computers, a server, or somewhere in the cloud?',
+              'If data is stored in multiple places, are you confident all locations are equally protected?',
+            ],
+            context: 'Knowing where data lives is the first step to understanding how it\'s protected.',
+          ),
+          GuidedPromptSection(
+            title: 'Laptops and mobile devices',
+            questions: [
+              'Are there laptops, tablets, or phones that can access or store CJIS data?',
+              'If a device were lost or stolen, would the data on it be protected?',
+            ],
+            context: 'Mobile devices are convenient but can be lost. If you\'re unsure how they\'re protected, it\'s worth asking.',
+          ),
+          GuidedPromptSection(
+            title: 'Backups and copies',
+            questions: [
+              'Are backups made of CJIS data, and do you know where those backups are kept?',
+              'Are backups protected the same way as the original data?',
+            ],
+            context: 'Backups are often overlooked. If they\'re stored on tapes or drives without protection, that\'s a potential gap.',
+          ),
+          GuidedPromptSection(
+            title: 'Sending data to others',
+            questions: [
+              'When CJIS data is sent to another agency or system, do you know if it\'s protected during transfer?',
+              'Is email ever used to send CJIS-related information?',
+            ],
+            context: 'Data can be exposed while moving between systems. If email is used, that\'s worth exploring further.',
+          ),
+          GuidedPromptSection(
+            title: 'Old data and disposal',
+            questions: [
+              'When computers or drives are replaced, what happens to the CJIS data that was on them?',
+              'Is there a clear process for erasing or destroying old storage devices?',
+            ],
+            context: 'Old equipment can still contain sensitive data. A clear disposal process helps prevent accidental exposure.',
+          ),
+        ],
+        higherRiskSituations: [
+          'CJIS data is stored in multiple locations without consistent protection',
+          'Laptops or mobile devices can access CJIS data and may not be protected if lost',
+          'Backups are made but not protected the same way as the original data',
+          'Email is used to send CJIS-related information',
+        ],
+        lowerRiskSituations: [
+          'There\'s a clear understanding of where CJIS data is stored',
+          'Mobile devices are protected and there\'s a plan if one is lost',
+          'Backups are protected and stored securely',
+          'Old equipment is erased or destroyed before disposal',
+        ],
+        policySections: ['5.10', '5.10.1.2'],
       ),
     ),
     const GuidanceCategory(
@@ -349,6 +467,65 @@ class GuidanceData {
         lowerRiskWhen:
             'Roles are well-documented, regularly reviewed, and aligned with specific job functions',
       ),
+      guidedPrompts: GuidedPrompts(
+        introduction:
+            'These questions help you think through who can do what in your CJIS systems. There are no right or wrong answers. "Not sure" is a valid response and often points to areas worth reviewing.',
+        sections: [
+          GuidedPromptSection(
+            title: 'Who can access what',
+            questions: [
+              'Does everyone who uses CJIS systems have the same level of access, or does it vary by job?',
+              'If access varies, how is it decided who gets which level?',
+            ],
+            context: 'When everyone has the same access, it\'s harder to limit what someone can reach if there\'s a problem.',
+          ),
+          GuidedPromptSection(
+            title: 'Changes in roles',
+            questions: [
+              'When someone moves to a different position, does their access change to match?',
+              'Could someone who changed roles still access things they no longer need?',
+            ],
+            context: 'Access that doesn\'t change when roles change can create gaps. If you\'re not sure, that\'s worth checking.',
+          ),
+          GuidedPromptSection(
+            title: 'Sensitive actions',
+            questions: [
+              'Are there actions in the system that require approval or a second person to complete?',
+              'Could one person both create and approve something sensitive without anyone else involved?',
+            ],
+            context: 'Separating responsibilities helps catch mistakes and prevent misuse.',
+          ),
+          GuidedPromptSection(
+            title: 'Reviewing access',
+            questions: [
+              'Is there ever a review to check whether people still need the access they have?',
+              'If there\'s no regular review, how would you know if someone has more access than they need?',
+            ],
+            context: 'Periodic reviews help ensure access stays appropriate as people and jobs change.',
+          ),
+          GuidedPromptSection(
+            title: 'Documentation',
+            questions: [
+              'Is there a written list or record of what access each role or person has?',
+              'If you needed to explain who has access to what, could you find that information easily?',
+            ],
+            context: 'Written records make it easier to answer questions and spot issues.',
+          ),
+        ],
+        higherRiskSituations: [
+          'Everyone has the same level of access regardless of job function',
+          'Access doesn\'t change when someone\'s role changes',
+          'One person can complete sensitive actions without oversight',
+          'There\'s no regular review of who has access to what',
+        ],
+        lowerRiskSituations: [
+          'Access is based on what each role actually needs',
+          'Access changes when someone moves to a new position',
+          'Sensitive actions require approval or a second person',
+          'There\'s a written record of who has access to what',
+        ],
+        policySections: ['5.2.1', '5.2.2'],
+      ),
     ),
     const GuidanceCategory(
       id: 'cloud_vendor',
@@ -410,6 +587,65 @@ class GuidanceData {
             'Your agency relies on cloud services, uses many third-party applications, or has limited in-house IT resources',
         lowerRiskWhen:
             'You maintain an approved vendor list, have documented evaluation processes, and regularly audit vendor compliance',
+      ),
+      guidedPrompts: GuidedPrompts(
+        introduction:
+            'These questions help you think through how outside companies and cloud services fit into your CJIS environment. There are no right or wrong answers. "Not sure" is a valid response and often highlights areas worth discussing with IT or leadership.',
+        sections: [
+          GuidedPromptSection(
+            title: 'Outside companies and services',
+            questions: [
+              'Does your agency use any cloud services or outside companies to store, access, or manage CJIS data?',
+              'If you\'re not sure, who would know?',
+            ],
+            context: 'Cloud services and vendors are common. Knowing who handles your data is the first step to understanding risk.',
+          ),
+          GuidedPromptSection(
+            title: 'Vendor access to data',
+            questions: [
+              'Do any vendors or IT support staff outside your agency have access to CJIS systems or data?',
+              'If so, do you know whether they went through background checks?',
+            ],
+            context: 'Anyone who touches CJIS data should meet certain standards. If you\'re unsure, it\'s worth verifying.',
+          ),
+          GuidedPromptSection(
+            title: 'Agreements and approvals',
+            questions: [
+              'When your agency starts using a new service or vendor, is there a process to review whether it\'s appropriate for CJIS data?',
+              'Are there signed agreements in place that address security responsibilities?',
+            ],
+            context: 'Written agreements help clarify who is responsible for what. If you don\'t know if they exist, that\'s useful to find out.',
+          ),
+          GuidedPromptSection(
+            title: 'Where data is located',
+            questions: [
+              'Do you know where your CJIS data is physically stored—whether it\'s in your building, a data center, or somewhere else?',
+              'If data is stored outside your agency, do you know which company or location?',
+            ],
+            context: 'Data location matters for legal and security reasons. If it\'s unclear, it\'s worth clarifying.',
+          ),
+          GuidedPromptSection(
+            title: 'Ongoing oversight',
+            questions: [
+              'Once a vendor or service is in use, does anyone check whether they continue to meet security expectations?',
+              'If a vendor had a security incident, how would you find out?',
+            ],
+            context: 'Ongoing oversight helps catch problems before they affect your agency.',
+          ),
+        ],
+        higherRiskSituations: [
+          'Vendors or cloud services access CJIS data without background checks',
+          'No signed agreements address security responsibilities',
+          'Data location is unknown or unclear',
+          'There\'s no ongoing review of vendor security practices',
+        ],
+        lowerRiskSituations: [
+          'There\'s a clear list of which vendors and services handle CJIS data',
+          'Vendor staff who access CJIS data have completed background checks',
+          'Written agreements address security responsibilities',
+          'Someone checks on vendor security practices periodically',
+        ],
+        policySections: ['5.14', '5.14.1.1'],
       ),
     ),
     const GuidanceCategory(
@@ -477,6 +713,65 @@ class GuidanceData {
             'Your agency has high staff turnover, uses contractors or part-time personnel, or has experienced security incidents',
         lowerRiskWhen:
             'You have formalized training programs, documented completion tracking, and regular reinforcement of security practices',
+      ),
+      guidedPrompts: GuidedPrompts(
+        introduction:
+            'These questions help you think through how your agency prepares people to work with CJIS systems. There are no right or wrong answers. "Not sure" is a valid response and often points to areas worth reviewing.',
+        sections: [
+          GuidedPromptSection(
+            title: 'Security training',
+            questions: [
+              'Do people who access CJIS systems receive training on security practices?',
+              'Is training a one-time event, or does it happen regularly?',
+            ],
+            context: 'Regular training helps people remember what to do—and what not to do.',
+          ),
+          GuidedPromptSection(
+            title: 'Background checks',
+            questions: [
+              'Does everyone with access to CJIS systems go through a background check?',
+              'If someone joined recently, would you know whether their background check was completed before they got access?',
+            ],
+            context: 'Background checks help ensure people are cleared before they access sensitive data.',
+          ),
+          GuidedPromptSection(
+            title: 'New staff and role changes',
+            questions: [
+              'When someone new joins or changes roles, is there a process to ensure they receive the right training?',
+              'How quickly does training happen after someone starts?',
+            ],
+            context: 'Delays in training can leave gaps. If there\'s no clear process, that\'s worth exploring.',
+          ),
+          GuidedPromptSection(
+            title: 'Tracking and records',
+            questions: [
+              'Is there a record of who has completed training and when?',
+              'If someone asked for proof of training, could you find it easily?',
+            ],
+            context: 'Good records make it easier to answer questions and stay on track.',
+          ),
+          GuidedPromptSection(
+            title: 'Responding to problems',
+            questions: [
+              'If something went wrong—like a suspicious email or a potential breach—would staff know what to do?',
+              'Is there a clear person or process to report security concerns to?',
+            ],
+            context: 'Knowing how to respond to problems helps limit damage when issues arise.',
+          ),
+        ],
+        higherRiskSituations: [
+          'Training only happens once and isn\'t repeated',
+          'Background checks aren\'t completed before people get access',
+          'There\'s no clear record of who has been trained',
+          'Staff wouldn\'t know what to do if something went wrong',
+        ],
+        lowerRiskSituations: [
+          'Training happens regularly for everyone with CJIS access',
+          'Background checks are completed before access is granted',
+          'There\'s a clear record of training completion',
+          'Staff know how to report security concerns',
+        ],
+        policySections: ['5.1', '5.5', '5.12'],
       ),
     ),
   ];
