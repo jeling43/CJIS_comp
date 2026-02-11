@@ -777,120 +777,326 @@ class GuidanceData {
   ];
 
   static Map<String, List<GuidanceQuestion>> categoryQuestions = {
+    // Access Control: Adaptive Conversational Question Flow
+    // This flow uses an adaptive model:
+    // - Starts with one broad baseline question
+    // - Detects uncertain responses and drills deeper (1-3 follow-ups)
+    // - Stops drilling when clarity improves
+    // - Ends with a reflective closing question
+    // - Max 3 levels deep per branch
     'access_control': [
+      // BASELINE QUESTION (Level 0)
+      // Section introduction is embedded in the first question context
       const GuidanceQuestion(
-        id: 'ac_q1',
+        id: 'ac_baseline',
         question:
-            'Does your organization have documented access control policies?',
+            'Let\'s start with a simple question: When someone at your agency needs to look up information in CJIS systems, who decides whether they\'re allowed to do that?',
         options: [
           AnswerOption(
-            text: 'Yes, fully documented and current',
-            nextQuestionId: 'ac_q2',
+            text: 'We have a clear process — someone specific approves access',
+            nextQuestionId: 'ac_closing',
           ),
           AnswerOption(
-            text: 'Partially documented',
-            result: GuidanceResult(
-              title: 'Documentation Gap Identified',
-              description:
-                  'Having incomplete access control documentation creates compliance risks.',
-              riskAreas: [
-                'Inconsistent access management',
-                'Audit findings',
-                'Policy enforcement challenges',
-              ],
-              recommendations: [
-                'Complete documentation of all access control policies',
-                'Define roles and responsibilities clearly',
-                'Establish review and update procedures',
-                'Train staff on documented policies',
-              ],
-              policyReference: 'CJIS Security Policy Section 5.2',
-            ),
+            text: 'It depends on the situation or the person',
+            nextQuestionId: 'ac_responsibility_drilldown',
           ),
           AnswerOption(
-            text: 'No documentation',
-            result: GuidanceResult(
-              title: 'Critical Documentation Gap',
-              description:
-                  'Lacking documented access control policies is a significant compliance issue.',
-              riskAreas: [
-                'Non-compliance with CJIS requirements',
-                'Unauthorized access risks',
-                'Inability to demonstrate controls',
-                'Inconsistent enforcement',
-              ],
-              recommendations: [
-                'Immediately begin documenting access control policies',
-                'Review CJIS Security Policy Section 5.2 requirements',
-                'Engage leadership for policy approval',
-                'Implement training program',
-                'Establish regular policy review cycle',
-              ],
-              policyReference: 'CJIS Security Policy Section 5.2',
-            ),
+            text: 'I\'m not sure who makes that decision',
+            nextQuestionId: 'ac_responsibility_drilldown',
+          ),
+          AnswerOption(
+            text: 'Central IT or a county office handles that for us',
+            nextQuestionId: 'ac_shared_responsibility',
           ),
         ],
       ),
+
+      // RESPONSIBILITY DRILL-DOWN (Level 1)
       const GuidanceQuestion(
-        id: 'ac_q2',
-        question: 'How frequently do you review user access privileges?',
+        id: 'ac_responsibility_drilldown',
+        question:
+            'That\'s helpful to know. Let me ask it a different way: If a new person joined your agency today, who would be the one to set up their access to CJIS systems?',
         options: [
           AnswerOption(
-            text: 'Quarterly or more often',
+            text: 'Our agency handles it internally — we know who to contact',
+            nextQuestionId: 'ac_device_baseline',
+          ),
+          AnswerOption(
+            text: 'We\'d contact IT or another department outside our agency',
+            nextQuestionId: 'ac_shared_responsibility',
+          ),
+          AnswerOption(
+            text: 'It would probably be a combination of people',
+            nextQuestionId: 'ac_responsibility_clarity',
+          ),
+          AnswerOption(
+            text: 'I\'m honestly not sure how that would work',
+            nextQuestionId: 'ac_responsibility_clarity',
+          ),
+        ],
+      ),
+
+      // SHARED RESPONSIBILITY PATH (Level 1)
+      const GuidanceQuestion(
+        id: 'ac_shared_responsibility',
+        question:
+            'When IT or an outside office handles access, does your agency still have a say in who gets access and what they can see?',
+        options: [
+          AnswerOption(
+            text: 'Yes, we request access and they set it up for us',
+            nextQuestionId: 'ac_device_baseline',
+          ),
+          AnswerOption(
+            text: 'They mostly decide based on job titles or roles',
+            nextQuestionId: 'ac_role_changes',
+          ),
+          AnswerOption(
+            text: 'I\'m not sure how much input we have',
+            nextQuestionId: 'ac_responsibility_clarity',
+          ),
+        ],
+      ),
+
+      // RESPONSIBILITY CLARITY DRILL-DOWN (Level 2)
+      const GuidanceQuestion(
+        id: 'ac_responsibility_clarity',
+        question:
+            'It sounds like responsibility might be spread across a few people or groups. If you needed to change someone\'s access quickly, would you know exactly who to contact?',
+        options: [
+          AnswerOption(
+            text: 'Yes, I know who to call',
+            nextQuestionId: 'ac_device_baseline',
+          ),
+          AnswerOption(
+            text: 'I\'d have to ask around to find out',
+            nextQuestionId: 'ac_device_baseline',
+          ),
+          AnswerOption(
+            text: 'It would probably take some time to figure out',
+            nextQuestionId: 'ac_device_baseline',
+          ),
+        ],
+      ),
+
+      // DEVICE BASELINE QUESTION (Level 1)
+      const GuidanceQuestion(
+        id: 'ac_device_baseline',
+        question:
+            'Now let\'s talk about the computers people use. Are the computers that access CJIS systems used only for CJIS work, or do people also use them for other things like email or web browsing?',
+        options: [
+          AnswerOption(
+            text: 'They\'re dedicated to CJIS work only',
+            nextQuestionId: 'ac_remote_baseline',
+          ),
+          AnswerOption(
+            text: 'People use them for other tasks too, like email or reports',
+            nextQuestionId: 'ac_mixed_use_drilldown',
+          ),
+          AnswerOption(
+            text: 'It varies — some are dedicated, some are shared-use',
+            nextQuestionId: 'ac_mixed_use_drilldown',
+          ),
+          AnswerOption(
+            text: 'I\'m not sure what else those computers are used for',
+            nextQuestionId: 'ac_mixed_use_drilldown',
+          ),
+        ],
+      ),
+
+      // MIXED-USE DRILL-DOWN (Level 2)
+      const GuidanceQuestion(
+        id: 'ac_mixed_use_drilldown',
+        question:
+            'When a computer is used for multiple things, it can sometimes create unexpected connections. Is the booking or records computer, for example, also connected to a shared printer or scanner that other computers use?',
+        options: [
+          AnswerOption(
+            text: 'Yes, it shares a printer or scanner with other computers',
+            nextQuestionId: 'ac_shared_devices_drilldown',
+          ),
+          AnswerOption(
+            text: 'No, it has its own dedicated printer or scanner',
+            nextQuestionId: 'ac_remote_baseline',
+          ),
+          AnswerOption(
+            text: 'I\'m not sure what devices are connected',
+            nextQuestionId: 'ac_shared_devices_drilldown',
+          ),
+        ],
+      ),
+
+      // SHARED DEVICES DRILL-DOWN (Level 3)
+      const GuidanceQuestion(
+        id: 'ac_shared_devices_drilldown',
+        question:
+            'Shared devices can create pathways people don\'t always think about. Could someone on a computer that doesn\'t normally access CJIS data send a print job to a printer that\'s connected to a CJIS computer?',
+        options: [
+          AnswerOption(
+            text: 'Yes, that\'s possible',
+            nextQuestionId: 'ac_remote_baseline',
+          ),
+          AnswerOption(
+            text: 'No, the printers are separated by network or location',
+            nextQuestionId: 'ac_remote_baseline',
+          ),
+          AnswerOption(
+            text: 'I\'m not sure how the printers are set up',
+            nextQuestionId: 'ac_remote_baseline',
+          ),
+        ],
+      ),
+
+      // REMOTE ACCESS BASELINE (Level 2)
+      const GuidanceQuestion(
+        id: 'ac_remote_baseline',
+        question:
+            'Can people access CJIS systems from somewhere other than the office — like from home, a patrol car, or while traveling?',
+        options: [
+          AnswerOption(
+            text: 'Yes, remote access is available',
+            nextQuestionId: 'ac_remote_drilldown',
+          ),
+          AnswerOption(
+            text: 'No, access is only available from inside the building',
+            nextQuestionId: 'ac_role_changes',
+          ),
+          AnswerOption(
+            text: 'I\'m not sure if remote access is set up',
+            nextQuestionId: 'ac_remote_drilldown',
+          ),
+        ],
+      ),
+
+      // REMOTE ACCESS DRILL-DOWN (Level 3)
+      const GuidanceQuestion(
+        id: 'ac_remote_drilldown',
+        question:
+            'When people connect remotely, does the system require any extra steps to verify who they are — beyond just a password?',
+        options: [
+          AnswerOption(
+            text: 'Yes, there\'s an extra step like a code or fingerprint',
+            nextQuestionId: 'ac_role_changes',
+          ),
+          AnswerOption(
+            text: 'Just a username and password',
+            nextQuestionId: 'ac_role_changes',
+          ),
+          AnswerOption(
+            text: 'I\'m not sure what steps are involved',
+            nextQuestionId: 'ac_role_changes',
+          ),
+        ],
+      ),
+
+      // ROLE CHANGES (Level 2)
+      const GuidanceQuestion(
+        id: 'ac_role_changes',
+        question:
+            'When someone changes jobs within your agency — like moving from patrol to records — does their CJIS access automatically change to match their new role?',
+        options: [
+          AnswerOption(
+            text: 'Yes, access is updated when roles change',
+            nextQuestionId: 'ac_departure',
+          ),
+          AnswerOption(
+            text: 'Sometimes, but it depends on who notices',
+            nextQuestionId: 'ac_departure',
+          ),
+          AnswerOption(
+            text: 'Not usually — people tend to keep the same access',
+            nextQuestionId: 'ac_departure',
+          ),
+          AnswerOption(
+            text: 'I\'m not sure how that works',
+            nextQuestionId: 'ac_departure',
+          ),
+        ],
+      ),
+
+      // DEPARTURE HANDLING (Level 3)
+      const GuidanceQuestion(
+        id: 'ac_departure',
+        question:
+            'When someone leaves your agency entirely, how quickly is their CJIS access removed?',
+        options: [
+          AnswerOption(
+            text: 'Same day or within a day or two',
+            nextQuestionId: 'ac_closing',
+          ),
+          AnswerOption(
+            text: 'Within a week or so',
+            nextQuestionId: 'ac_closing',
+          ),
+          AnswerOption(
+            text: 'It varies — sometimes it takes longer',
+            nextQuestionId: 'ac_closing',
+          ),
+          AnswerOption(
+            text: 'I\'m not sure when access gets removed',
+            nextQuestionId: 'ac_closing',
+          ),
+        ],
+      ),
+
+      // CLOSING REFLECTIVE QUESTION
+      const GuidanceQuestion(
+        id: 'ac_closing',
+        question:
+            'Thanks for walking through these questions. One last thing: If three different people at your agency answered these same questions, do you think they would give similar answers?',
+        options: [
+          AnswerOption(
+            text: 'Yes, we\'d mostly agree on how things work',
             result: GuidanceResult(
-              title: 'Good Access Review Practice',
+              title: 'Access Control: Reflection Complete',
               description:
-                  'Regular access reviews help maintain proper access controls.',
+                  'It sounds like your agency has a shared understanding of how CJIS access works. This consistency is valuable for day-to-day operations and helps when questions come up.',
               riskAreas: [],
               recommendations: [
-                'Continue quarterly reviews',
-                'Document all review findings',
-                'Promptly address any issues found',
-                'Consider automated review tools',
+                'Consider documenting these practices if they aren\'t already written down',
+                'Having clear answers makes onboarding and audits easier',
+                'Keep checking in periodically — practices can drift over time',
               ],
-              policyReference: 'CJIS Security Policy Section 5.2',
             ),
           ),
           AnswerOption(
-            text: 'Annually',
+            text: 'We might have some different answers',
             result: GuidanceResult(
-              title: 'Consider More Frequent Reviews',
+              title: 'Access Control: Reflection Complete',
               description:
-                  'Annual reviews meet minimum requirements but quarterly is better.',
-              riskAreas: [
-                'Delayed detection of inappropriate access',
-                'Longer window for privilege creep',
-              ],
+                  'It\'s common for people to have slightly different views of how access works in practice. Surfacing these differences can help clarify expectations and reduce confusion.',
+              riskAreas: [],
               recommendations: [
-                'Consider increasing review frequency to quarterly',
-                'Implement automated alerts for suspicious access',
-                'Document review procedures clearly',
-                'Train reviewers on what to look for',
+                'Consider having a conversation with colleagues to compare notes',
+                'Identifying areas where understanding differs can prevent surprises later',
+                'Writing down how things actually work helps everyone stay on the same page',
               ],
-              policyReference: 'CJIS Security Policy Section 5.2',
             ),
           ),
           AnswerOption(
-            text: 'Less than annually or never',
+            text: 'I think we\'d have pretty different answers',
             result: GuidanceResult(
-              title: 'Insufficient Access Review',
+              title: 'Access Control: Reflection Complete',
               description:
-                  'Infrequent or absent access reviews create significant security risks.',
-              riskAreas: [
-                'Accumulated inappropriate access',
-                'Non-compliance with CJIS requirements',
-                'Increased insider threat risk',
-                'Audit findings',
-              ],
+                  'When people have different understandings of access practices, it often points to areas that could use more clarity. This is a normal discovery, especially in busy environments.',
+              riskAreas: [],
               recommendations: [
-                'Immediately implement at least annual reviews',
-                'Conduct comprehensive access audit',
-                'Remove all inappropriate access',
-                'Document review procedures',
-                'Assign responsibility for reviews',
-                'Work toward quarterly review cycle',
+                'Consider gathering a few people together to talk through how access actually works',
+                'Identifying gaps in shared understanding is the first step to addressing them',
+                'Focus on the areas that came up as unclear during this conversation',
               ],
-              policyReference: 'CJIS Security Policy Section 5.2',
+            ),
+          ),
+          AnswerOption(
+            text: 'I\'m not sure how others would answer',
+            result: GuidanceResult(
+              title: 'Access Control: Reflection Complete',
+              description:
+                  'Not knowing how others would answer is itself useful information. It suggests there may be value in having a conversation across your agency about how CJIS access works in practice.',
+              riskAreas: [],
+              recommendations: [
+                'Consider sharing these questions with a colleague to compare perspectives',
+                'Small agencies often rely on informal knowledge — writing things down helps',
+                'This reflection can be a starting point for a broader team discussion',
+              ],
             ),
           ),
         ],

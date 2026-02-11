@@ -1,0 +1,432 @@
+{
+  "section": "Access Control",
+  "flowType": "Adaptive Conversational",
+  "introduction": "This section guides administrative and IT users through everyday-language questions that help clarify how access to CJIS systems works in practice. There are no right or wrong answers. 'Not sure' is always a valid response.",
+  "designPrinciples": {
+    "adaptiveModel": [
+      "Start with one broad baseline question",
+      "Detect weak or uncertain responses",
+      "Drill deeper with 1-3 targeted follow-up questions when uncertainty detected",
+      "Stop drilling when clarity improves",
+      "End with a reflective closing question"
+    ],
+    "toneRequirements": [
+      "Conversational and supportive",
+      "Everyday language",
+      "No technical cybersecurity terms",
+      "No policy citations in user-facing text",
+      "No acronyms except CJIS",
+      "Never accusatory",
+      "'Not sure' treated as valid and normal"
+    ],
+    "targetEnvironments": [
+      "Small law enforcement agencies",
+      "Shared booking or records computers",
+      "Mixed-use workstations",
+      "Shared printers or scanners",
+      "Remote access scenarios",
+      "Centralized county or municipal IT",
+      "Split responsibility between agency and IT"
+    ]
+  },
+  "maxDepth": 3,
+  "totalQuestions": 12,
+  "questions": [
+    {
+      "id": "ac_baseline",
+      "level": 0,
+      "type": "baseline",
+      "question": "Let's start with a simple question: When someone at your agency needs to look up information in CJIS systems, who decides whether they're allowed to do that?",
+      "options": [
+        {
+          "text": "We have a clear process — someone specific approves access",
+          "interpretation": "confident",
+          "nextQuestionId": "ac_closing"
+        },
+        {
+          "text": "It depends on the situation or the person",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_responsibility_drilldown"
+        },
+        {
+          "text": "I'm not sure who makes that decision",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_responsibility_drilldown"
+        },
+        {
+          "text": "Central IT or a county office handles that for us",
+          "interpretation": "external",
+          "nextQuestionId": "ac_shared_responsibility"
+        }
+      ]
+    },
+    {
+      "id": "ac_responsibility_drilldown",
+      "level": 1,
+      "type": "drilldown",
+      "topic": "responsibility boundaries",
+      "question": "That's helpful to know. Let me ask it a different way: If a new person joined your agency today, who would be the one to set up their access to CJIS systems?",
+      "options": [
+        {
+          "text": "Our agency handles it internally — we know who to contact",
+          "interpretation": "confident",
+          "nextQuestionId": "ac_device_baseline"
+        },
+        {
+          "text": "We'd contact IT or another department outside our agency",
+          "interpretation": "external",
+          "nextQuestionId": "ac_shared_responsibility"
+        },
+        {
+          "text": "It would probably be a combination of people",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_responsibility_clarity"
+        },
+        {
+          "text": "I'm honestly not sure how that would work",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_responsibility_clarity"
+        }
+      ]
+    },
+    {
+      "id": "ac_shared_responsibility",
+      "level": 1,
+      "type": "drilldown",
+      "topic": "shared IT responsibility",
+      "question": "When IT or an outside office handles access, does your agency still have a say in who gets access and what they can see?",
+      "options": [
+        {
+          "text": "Yes, we request access and they set it up for us",
+          "interpretation": "confident",
+          "nextQuestionId": "ac_device_baseline"
+        },
+        {
+          "text": "They mostly decide based on job titles or roles",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_role_changes"
+        },
+        {
+          "text": "I'm not sure how much input we have",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_responsibility_clarity"
+        }
+      ]
+    },
+    {
+      "id": "ac_responsibility_clarity",
+      "level": 2,
+      "type": "drilldown",
+      "topic": "responsibility clarity",
+      "question": "It sounds like responsibility might be spread across a few people or groups. If you needed to change someone's access quickly, would you know exactly who to contact?",
+      "options": [
+        {
+          "text": "Yes, I know who to call",
+          "interpretation": "confident",
+          "nextQuestionId": "ac_device_baseline"
+        },
+        {
+          "text": "I'd have to ask around to find out",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_device_baseline"
+        },
+        {
+          "text": "It would probably take some time to figure out",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_device_baseline"
+        }
+      ]
+    },
+    {
+      "id": "ac_device_baseline",
+      "level": 1,
+      "type": "topic-baseline",
+      "topic": "mixed-use computers",
+      "question": "Now let's talk about the computers people use. Are the computers that access CJIS systems used only for CJIS work, or do people also use them for other things like email or web browsing?",
+      "options": [
+        {
+          "text": "They're dedicated to CJIS work only",
+          "interpretation": "confident",
+          "nextQuestionId": "ac_remote_baseline"
+        },
+        {
+          "text": "People use them for other tasks too, like email or reports",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_mixed_use_drilldown"
+        },
+        {
+          "text": "It varies — some are dedicated, some are shared-use",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_mixed_use_drilldown"
+        },
+        {
+          "text": "I'm not sure what else those computers are used for",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_mixed_use_drilldown"
+        }
+      ]
+    },
+    {
+      "id": "ac_mixed_use_drilldown",
+      "level": 2,
+      "type": "drilldown",
+      "topic": "shared devices",
+      "question": "When a computer is used for multiple things, it can sometimes create unexpected connections. Is the booking or records computer, for example, also connected to a shared printer or scanner that other computers use?",
+      "options": [
+        {
+          "text": "Yes, it shares a printer or scanner with other computers",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_shared_devices_drilldown"
+        },
+        {
+          "text": "No, it has its own dedicated printer or scanner",
+          "interpretation": "confident",
+          "nextQuestionId": "ac_remote_baseline"
+        },
+        {
+          "text": "I'm not sure what devices are connected",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_shared_devices_drilldown"
+        }
+      ]
+    },
+    {
+      "id": "ac_shared_devices_drilldown",
+      "level": 3,
+      "type": "drilldown",
+      "topic": "device pathways",
+      "question": "Shared devices can create pathways people don't always think about. Could someone on a computer that doesn't normally access CJIS data send a print job to a printer that's connected to a CJIS computer?",
+      "options": [
+        {
+          "text": "Yes, that's possible",
+          "interpretation": "aware",
+          "nextQuestionId": "ac_remote_baseline"
+        },
+        {
+          "text": "No, the printers are separated by network or location",
+          "interpretation": "confident",
+          "nextQuestionId": "ac_remote_baseline"
+        },
+        {
+          "text": "I'm not sure how the printers are set up",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_remote_baseline"
+        }
+      ]
+    },
+    {
+      "id": "ac_remote_baseline",
+      "level": 2,
+      "type": "topic-baseline",
+      "topic": "remote access",
+      "question": "Can people access CJIS systems from somewhere other than the office — like from home, a patrol car, or while traveling?",
+      "options": [
+        {
+          "text": "Yes, remote access is available",
+          "interpretation": "yes",
+          "nextQuestionId": "ac_remote_drilldown"
+        },
+        {
+          "text": "No, access is only available from inside the building",
+          "interpretation": "no",
+          "nextQuestionId": "ac_role_changes"
+        },
+        {
+          "text": "I'm not sure if remote access is set up",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_remote_drilldown"
+        }
+      ]
+    },
+    {
+      "id": "ac_remote_drilldown",
+      "level": 3,
+      "type": "drilldown",
+      "topic": "remote verification",
+      "question": "When people connect remotely, does the system require any extra steps to verify who they are — beyond just a password?",
+      "options": [
+        {
+          "text": "Yes, there's an extra step like a code or fingerprint",
+          "interpretation": "confident",
+          "nextQuestionId": "ac_role_changes"
+        },
+        {
+          "text": "Just a username and password",
+          "interpretation": "aware",
+          "nextQuestionId": "ac_role_changes"
+        },
+        {
+          "text": "I'm not sure what steps are involved",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_role_changes"
+        }
+      ]
+    },
+    {
+      "id": "ac_role_changes",
+      "level": 2,
+      "type": "topic-baseline",
+      "topic": "access changes when roles change",
+      "question": "When someone changes jobs within your agency — like moving from patrol to records — does their CJIS access automatically change to match their new role?",
+      "options": [
+        {
+          "text": "Yes, access is updated when roles change",
+          "interpretation": "confident",
+          "nextQuestionId": "ac_departure"
+        },
+        {
+          "text": "Sometimes, but it depends on who notices",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_departure"
+        },
+        {
+          "text": "Not usually — people tend to keep the same access",
+          "interpretation": "aware",
+          "nextQuestionId": "ac_departure"
+        },
+        {
+          "text": "I'm not sure how that works",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_departure"
+        }
+      ]
+    },
+    {
+      "id": "ac_departure",
+      "level": 3,
+      "type": "drilldown",
+      "topic": "departure handling",
+      "question": "When someone leaves your agency entirely, how quickly is their CJIS access removed?",
+      "options": [
+        {
+          "text": "Same day or within a day or two",
+          "interpretation": "confident",
+          "nextQuestionId": "ac_closing"
+        },
+        {
+          "text": "Within a week or so",
+          "interpretation": "aware",
+          "nextQuestionId": "ac_closing"
+        },
+        {
+          "text": "It varies — sometimes it takes longer",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_closing"
+        },
+        {
+          "text": "I'm not sure when access gets removed",
+          "interpretation": "uncertain",
+          "nextQuestionId": "ac_closing"
+        }
+      ]
+    },
+    {
+      "id": "ac_closing",
+      "level": 0,
+      "type": "closing",
+      "question": "Thanks for walking through these questions. One last thing: If three different people at your agency answered these same questions, do you think they would give similar answers?",
+      "options": [
+        {
+          "text": "Yes, we'd mostly agree on how things work",
+          "interpretation": "consistent",
+          "result": {
+            "title": "Access Control: Reflection Complete",
+            "description": "It sounds like your agency has a shared understanding of how CJIS access works. This consistency is valuable for day-to-day operations and helps when questions come up.",
+            "recommendations": [
+              "Consider documenting these practices if they aren't already written down",
+              "Having clear answers makes onboarding and audits easier",
+              "Keep checking in periodically — practices can drift over time"
+            ]
+          }
+        },
+        {
+          "text": "We might have some different answers",
+          "interpretation": "somewhat-varied",
+          "result": {
+            "title": "Access Control: Reflection Complete",
+            "description": "It's common for people to have slightly different views of how access works in practice. Surfacing these differences can help clarify expectations and reduce confusion.",
+            "recommendations": [
+              "Consider having a conversation with colleagues to compare notes",
+              "Identifying areas where understanding differs can prevent surprises later",
+              "Writing down how things actually work helps everyone stay on the same page"
+            ]
+          }
+        },
+        {
+          "text": "I think we'd have pretty different answers",
+          "interpretation": "varied",
+          "result": {
+            "title": "Access Control: Reflection Complete",
+            "description": "When people have different understandings of access practices, it often points to areas that could use more clarity. This is a normal discovery, especially in busy environments.",
+            "recommendations": [
+              "Consider gathering a few people together to talk through how access actually works",
+              "Identifying gaps in shared understanding is the first step to addressing them",
+              "Focus on the areas that came up as unclear during this conversation"
+            ]
+          }
+        },
+        {
+          "text": "I'm not sure how others would answer",
+          "interpretation": "unknown",
+          "result": {
+            "title": "Access Control: Reflection Complete",
+            "description": "Not knowing how others would answer is itself useful information. It suggests there may be value in having a conversation across your agency about how CJIS access works in practice.",
+            "recommendations": [
+              "Consider sharing these questions with a colleague to compare perspectives",
+              "Small agencies often rely on informal knowledge — writing things down helps",
+              "This reflection can be a starting point for a broader team discussion"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "flowDiagram": {
+    "description": "Visual representation of the adaptive flow branching",
+    "paths": [
+      {
+        "name": "Quick Path (Confident)",
+        "flow": "ac_baseline -> ac_closing",
+        "depth": 1,
+        "description": "User has clear understanding of access control, skips to reflection"
+      },
+      {
+        "name": "Responsibility Exploration Path",
+        "flow": "ac_baseline -> ac_responsibility_drilldown -> ac_responsibility_clarity -> ac_device_baseline -> ...",
+        "depth": 3,
+        "description": "User unsure about who controls access, explores responsibility boundaries"
+      },
+      {
+        "name": "Shared IT Path",
+        "flow": "ac_baseline -> ac_shared_responsibility -> ac_device_baseline -> ...",
+        "depth": 2,
+        "description": "Access managed by external IT, explores agency input"
+      },
+      {
+        "name": "Full Device Exploration Path",
+        "flow": "... -> ac_device_baseline -> ac_mixed_use_drilldown -> ac_shared_devices_drilldown -> ac_remote_baseline -> ...",
+        "depth": 3,
+        "description": "Mixed-use devices detected, explores shared devices and connections"
+      },
+      {
+        "name": "Remote Access Path",
+        "flow": "... -> ac_remote_baseline -> ac_remote_drilldown -> ac_role_changes -> ...",
+        "depth": 2,
+        "description": "Remote access available, explores verification steps"
+      },
+      {
+        "name": "Role Changes Path",
+        "flow": "... -> ac_role_changes -> ac_departure -> ac_closing",
+        "depth": 2,
+        "description": "Explores how access changes with role or departure"
+      }
+    ]
+  },
+  "drilldownTopics": [
+    "Mixed-use computers",
+    "Shared devices (printers, scanners)",
+    "Remote access",
+    "Responsibility boundaries",
+    "Access changes when roles change"
+  ]
+}
