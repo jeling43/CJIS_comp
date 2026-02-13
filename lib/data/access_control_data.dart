@@ -397,7 +397,7 @@ class AccessControlData {
       'Would leadership and IT describe this process the same way?',
     ],
     'mixed_use': [
-      'Is remote access protected consistently across users?',
+      'Has the mixed-use workstation arrangement been reviewed?',
       'Would leadership and IT describe this process the same way?',
     ],
     'reflection': [
