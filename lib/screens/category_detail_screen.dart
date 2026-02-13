@@ -188,7 +188,66 @@ class CategoryDetailScreen extends StatelessWidget {
                     const SizedBox(height: 24),
                   ],
                   const SizedBox(height: 8),
-                  if (hasQuestions) ...[
+                  // Special Access Control section with clarity-focused flow
+                  if (categoryId == 'access_control') ...[
+                    Card(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primaryContainer
+                          .withValues(alpha: 0.5),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.lock_outline,
+                                  color: Theme.of(context).colorScheme.primary,
+                                  size: 32,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    'Access Control Reflection',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              'This section helps you think through how access to CJIS systems works in your environment. The goal is not to test compliance, but to clarify how decisions are made and whether anything is based on assumptions.',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/access-control',
+                                );
+                              },
+                              icon: const Icon(Icons.play_arrow),
+                              label: const Text('Start Guided Questions'),
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ] else if (hasQuestions) ...[
                     Card(
                       color: Theme.of(context)
                           .colorScheme
