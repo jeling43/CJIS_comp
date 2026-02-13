@@ -434,10 +434,14 @@ class AccessControlData {
     // Build suggested follow-up questions based on uncertainty areas
     final List<String> followUpQuestions = [];
     for (final area in uncertaintyAreas) {
-      // Find category from the area text
+      // Match uncertainty area to appropriate category and add relevant questions
       for (final entry in followUpQuestionsByArea.entries) {
-        if (followUpQuestions.length < 4) {
-          followUpQuestions.addAll(entry.value.take(2));
+        final categoryKey = entry.key;
+        final questions = entry.value;
+        
+        // Check if the uncertainty area relates to this category
+        if (_areaMatchesCategory(area, categoryKey) && followUpQuestions.length < 4) {
+          followUpQuestions.addAll(questions.take(2));
         }
       }
     }
@@ -484,6 +488,34 @@ class AccessControlData {
       return questions.firstWhere((q) => q.isBaseline);
     } catch (e) {
       return questions.isNotEmpty ? questions.first : null;
+    }
+  }
+
+  /// Helper to match an uncertainty area to a category key
+  static bool _areaMatchesCategory(String area, String categoryKey) {
+    final areaLower = area.toLowerCase();
+    switch (categoryKey) {
+      case 'responsibility':
+        return areaLower.contains('responsibility') ||
+            areaLower.contains('granting') ||
+            areaLower.contains('removing') ||
+            areaLower.contains('documentation') ||
+            areaLower.contains('process for requesting');
+      case 'access_changes':
+        return areaLower.contains('role') ||
+            areaLower.contains('change') ||
+            areaLower.contains('leave') ||
+            areaLower.contains('staff');
+      case 'remote_access':
+        return areaLower.contains('remote') ||
+            areaLower.contains('authentication') ||
+            areaLower.contains('verified');
+      case 'individual_access':
+        return areaLower.contains('individual') ||
+            areaLower.contains('accountability') ||
+            areaLower.contains('track');
+      default:
+        return false;
     }
   }
 }

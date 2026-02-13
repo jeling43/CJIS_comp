@@ -147,8 +147,11 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
   }
 
   Widget _buildProgressIndicator() {
-    // Calculate progress based on responses
-    final progress = _responses.length / 6; // Approximate total questions
+    // Calculate progress based on responses relative to baseline questions count
+    // Using baseline questions as a rough progress indicator since the actual path varies
+    final baselineCount = AccessControlData.questions.where((q) => q.isBaseline).length;
+    final estimatedTotal = baselineCount + 2; // Baseline + reflective + average drill-down
+    final progress = _responses.length / estimatedTotal;
     final clampedProgress = progress.clamp(0.0, 1.0);
 
     return Column(
