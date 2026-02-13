@@ -55,11 +55,11 @@ class _AccessControlEntryScreenState extends State<AccessControlEntryScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
-                  // Short description
+                  // Short description (max 3 sentences per requirements)
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      'This section helps you think through how access to CJIS systems works in your environment. The goal is not to test compliance, but to clarify how decisions are made and whether anything is based on assumptions.',
+                      'This section helps you reflect on how access to CJIS systems works in your environment. The goal is to clarify decision-making and identify areas that may benefit from confirmation.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             height: 1.6,
                             color: Theme.of(context)
@@ -108,7 +108,7 @@ class _AccessControlEntryScreenState extends State<AccessControlEntryScreen> {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'View policy references',
+                          'View Policy References',
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     color: Theme.of(context).colorScheme.primary,

@@ -31,7 +31,7 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
   void _handleAnswer(AccessControlOption option) {
     if (_currentQuestion == null) return;
 
-    // Record the response
+    // Record the response with layered adaptive model signal flags
     final response = AccessControlResponse(
       questionId: _currentQuestion!.id,
       questionText: _currentQuestion!.question,
@@ -39,6 +39,9 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
       indicatesUncertainty: option.indicatesUncertainty,
       indicatesSharedResponsibility: option.indicatesSharedResponsibility,
       uncertaintyArea: option.uncertaintyArea,
+      interpretationUncertainty: option.interpretationUncertainty,
+      implementationUncertainty: option.implementationUncertainty,
+      foundationalFlag: option.foundationalFlag,
     );
 
     setState(() {
@@ -292,17 +295,17 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Section header
+                // Section header - Part 4: "Access Control Overview"
                 _buildResultsHeader(),
+                const SizedBox(height: 24),
+                // Part 4: Two indicators - Interpretation Clarity and Implementation Readiness
+                _buildIndicatorsCard(result),
                 const SizedBox(height: 24),
                 // High-level summary
                 _buildSummaryCard(result),
                 const SizedBox(height: 24),
-                // Visual clarity spectrum
+                // Visual clarity spectrum - Part 4: Neutral clarity bar
                 _buildClaritySpectrum(result),
-                const SizedBox(height: 24),
-                // Clarification priority indicator
-                _buildClarificationPriority(result),
                 const SizedBox(height: 24),
                 // Uncertainty summary
                 if (result.uncertaintyAreas.isNotEmpty)
@@ -337,7 +340,7 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Access Control Reflection',
+              'Access Control Overview',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -346,6 +349,85 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  /// Part 4: Two indicators - Interpretation Clarity and Implementation Readiness
+  Widget _buildIndicatorsCard(AccessControlReflectionResult result) {
+    return Card(
+      elevation: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Interpretation Clarity indicator
+            _buildIndicatorRow(
+              icon: Icons.menu_book_outlined,
+              label: 'Interpretation Clarity',
+              value: result.interpretationClarity.displayText,
+              isReviewRecommended: result.interpretationClarity == 
+                  InterpretationClarity.reviewRecommended,
+            ),
+            const SizedBox(height: 20),
+            const Divider(),
+            const SizedBox(height: 20),
+            // Implementation Readiness indicator
+            _buildIndicatorRow(
+              icon: Icons.build_outlined,
+              label: 'Implementation Readiness',
+              value: result.implementationReadiness.displayText,
+              isReviewRecommended: result.implementationReadiness == 
+                  ImplementationReadiness.earlyClarificationRecommended,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIndicatorRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    required bool isReviewRecommended,
+  }) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          color: Theme.of(context).colorScheme.primary,
+          size: 24,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  value,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -387,16 +469,23 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
 
   Widget _buildClaritySpectrum(AccessControlReflectionResult result) {
     // Calculate the fill level based on clarity (no percentages shown)
+    // Part 4: Display neutral clarity bar [ ▮▮▮▯▯ ]
+    // Use balanced fill levels: 5 (best), 3 (middle), 1 (needs attention)
     int fillLevel;
     switch (result.clarityLevel) {
       case ClarityLevel.generallyClear:
-        fillLevel = 4;
+        fillLevel = 5;
       case ClarityLevel.reviewRecommended:
-        fillLevel = 2;
+        fillLevel = 3;
       case ClarityLevel.earlyClarificationRecommended:
         fillLevel = 1;
     }
 
+    // Build the clarity bar string using Unicode block characters
+    final filledChar = '▮';
+    final emptyChar = '▯';
+    final clarityBar = '[ ${filledChar * fillLevel}${emptyChar * (5 - fillLevel)} ]';
+
     return Card(
       elevation: 1,
       child: Padding(
@@ -405,115 +494,22 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Access Control',
+              'Clarity Indicator',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Clarity Level: ${result.clarityLevel.displayText}',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.7),
-                  ),
-            ),
             const SizedBox(height: 16),
-            // Visual clarity bar (neutral, no colors like red/yellow/green)
-            Row(
-              children: [
-                Text(
-                  '[ ',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontFamily: 'monospace',
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                ),
-                ...List.generate(5, (index) {
-                  final isFilled = index < fillLevel;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2),
-                    child: Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: isFilled
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context)
-                                .colorScheme
-                                .outline
-                                .withValues(alpha: 0.3),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
+            // Neutral clarity bar as specified in Part 4
+            Center(
+              child: Text(
+                clarityBar,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontFamily: 'monospace',
+                      letterSpacing: 4,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                  );
-                }),
-                Text(
-                  ' ]',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontFamily: 'monospace',
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildClarificationPriority(AccessControlReflectionResult result) {
-    return Card(
-      elevation: 1,
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                // Priority badge
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondaryContainer,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.flag_outlined,
-                        size: 16,
-                        color:
-                            Theme.of(context).colorScheme.onSecondaryContainer,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Clarification Priority: ${result.clarificationPriority.displayText}',
-                        style:
-                            Theme.of(context).textTheme.labelLarge?.copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSecondaryContainer,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              result.clarificationPriority.explanation,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    height: 1.5,
-                  ),
+              ),
             ),
           ],
         ),
