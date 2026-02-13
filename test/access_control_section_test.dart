@@ -490,35 +490,56 @@ void main() {
           reason: 'Some options should have foundationalFlag');
     });
 
-    test('Summary text avoids prohibited words', () {
-      final responses = [
+    test('Summary text avoids prohibited words for all clarity levels', () {
+      // Test with layered model flags only (no legacy indicatesUncertainty)
+      // to verify summary generation uses the new model
+      
+      // Test 1: Generally Clear level
+      var responses = <AccessControlResponse>[];
+      var result = AccessControlData.calculateResult(responses);
+      _verifyNoProhibitedWords(result.summaryText);
+      
+      // Test 2: Review Recommended level
+      responses = [
         const AccessControlResponse(
           questionId: 'q1',
           questionText: 'Question 1?',
           selectedOptionText: 'Uncertain answer',
-          indicatesUncertainty: true,
           interpretationUncertainty: true,
+        ),
+      ];
+      result = AccessControlData.calculateResult(responses);
+      _verifyNoProhibitedWords(result.summaryText);
+      
+      // Test 3: Early Clarification Recommended level (with foundational flag)
+      responses = [
+        const AccessControlResponse(
+          questionId: 'q1',
+          questionText: 'Question 1?',
+          selectedOptionText: 'Foundational concern',
           implementationUncertainty: true,
           foundationalFlag: true,
         ),
       ];
-
-      final result = AccessControlData.calculateResult(responses);
-
-      // Check that summary doesn't contain prohibited words
-      final prohibitedWords = [
-        'non-compliant',
-        'violation',
-        'fail',
-        'audit finding',
-        'risk score',
-      ];
-
-      for (final word in prohibitedWords) {
-        expect(result.summaryText.toLowerCase().contains(word.toLowerCase()),
-            isFalse,
-            reason: 'Summary should not contain prohibited word "$word"');
-      }
+      result = AccessControlData.calculateResult(responses);
+      _verifyNoProhibitedWords(result.summaryText);
     });
   });
+}
+
+/// Helper to verify summary text doesn't contain prohibited words
+void _verifyNoProhibitedWords(String summaryText) {
+  final prohibitedWords = [
+    'non-compliant',
+    'violation',
+    'fail',
+    'audit finding',
+    'risk score',
+  ];
+
+  for (final word in prohibitedWords) {
+    expect(summaryText.toLowerCase().contains(word.toLowerCase()),
+        isFalse,
+        reason: 'Summary should not contain prohibited word "$word"');
+  }
 }

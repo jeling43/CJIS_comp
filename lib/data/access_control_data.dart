@@ -570,8 +570,6 @@ class AccessControlData {
     int interpretationUncertaintyCount = 0;
     int implementationUncertaintyCount = 0;
     bool hasFoundationalFlag = false;
-    int generalUncertaintyCount = 0;
-    int sharedResponsibilityCount = 0;
     final Set<String> uncertaintyAreas = {};
 
     for (final response in responses) {
@@ -586,15 +584,9 @@ class AccessControlData {
         hasFoundationalFlag = true;
       }
       
-      // Track general uncertainty for backward compatibility
-      if (response.indicatesUncertainty) {
-        generalUncertaintyCount++;
-        if (response.uncertaintyArea != null) {
-          uncertaintyAreas.add(response.uncertaintyArea!);
-        }
-      }
-      if (response.indicatesSharedResponsibility) {
-        sharedResponsibilityCount++;
+      // Track uncertainty areas for follow-up question generation
+      if (response.indicatesUncertainty && response.uncertaintyArea != null) {
+        uncertaintyAreas.add(response.uncertaintyArea!);
       }
     }
 
@@ -616,22 +608,23 @@ class AccessControlData {
       implementationReadiness = ImplementationReadiness.generallyClear;
     }
 
-    // Determine overall clarity level (maintains backward compatibility)
+    // Determine overall clarity level based on the layered model
+    // This aligns with the interpretation and implementation indicators
     ClarityLevel clarityLevel;
-    if (generalUncertaintyCount == 0 && sharedResponsibilityCount == 0 &&
-        interpretationUncertaintyCount == 0 && implementationUncertaintyCount == 0) {
+    if (interpretationUncertaintyCount == 0 && implementationUncertaintyCount == 0 && !hasFoundationalFlag) {
       clarityLevel = ClarityLevel.generallyClear;
-    } else if (generalUncertaintyCount <= 2 && !hasFoundationalFlag) {
-      clarityLevel = ClarityLevel.reviewRecommended;
-    } else {
+    } else if (implementationUncertaintyCount >= 2 || hasFoundationalFlag) {
       clarityLevel = ClarityLevel.earlyClarificationRecommended;
+    } else {
+      clarityLevel = ClarityLevel.reviewRecommended;
     }
 
-    // Determine clarification priority
+    // Determine clarification priority based on combined uncertainty
+    final totalUncertainty = interpretationUncertaintyCount + implementationUncertaintyCount;
     ClarificationPriority priority;
-    if (generalUncertaintyCount == 0 && sharedResponsibilityCount == 0) {
+    if (totalUncertainty == 0 && !hasFoundationalFlag) {
       priority = ClarificationPriority.standard;
-    } else if (generalUncertaintyCount <= 2 && sharedResponsibilityCount <= 1) {
+    } else if (totalUncertainty <= 3 && !hasFoundationalFlag) {
       priority = ClarificationPriority.elevated;
     } else {
       priority = ClarificationPriority.focused;

@@ -470,10 +470,11 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
   Widget _buildClaritySpectrum(AccessControlReflectionResult result) {
     // Calculate the fill level based on clarity (no percentages shown)
     // Part 4: Display neutral clarity bar [ ▮▮▮▯▯ ]
+    // Use balanced fill levels: 5 (best), 3 (middle), 1 (needs attention)
     int fillLevel;
     switch (result.clarityLevel) {
       case ClarityLevel.generallyClear:
-        fillLevel = 4;
+        fillLevel = 5;
       case ClarityLevel.reviewRecommended:
         fillLevel = 3;
       case ClarityLevel.earlyClarificationRecommended:
