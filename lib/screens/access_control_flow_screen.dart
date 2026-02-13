@@ -298,22 +298,20 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
                 // Section header - Part 4: "Access Control Overview"
                 _buildResultsHeader(),
                 const SizedBox(height: 24),
+                // Part 4: Executive Summary Block
+                _buildExecutiveSummary(),
+                const SizedBox(height: 24),
+                // Part 4: Visual clarity spectrum with Clarification Priority
+                _buildClaritySpectrum(result),
+                const SizedBox(height: 24),
                 // Part 4: Two indicators - Interpretation Clarity and Implementation Readiness
                 _buildIndicatorsCard(result),
                 const SizedBox(height: 24),
-                // High-level summary
-                _buildSummaryCard(result),
+                // Part 4: "Why This Matters" section
+                _buildWhyThisMattersCard(),
                 const SizedBox(height: 24),
-                // Visual clarity spectrum - Part 4: Neutral clarity bar
-                _buildClaritySpectrum(result),
-                const SizedBox(height: 24),
-                // Uncertainty summary
-                if (result.uncertaintyAreas.isNotEmpty)
-                  _buildUncertaintySummary(result),
-                if (result.uncertaintyAreas.isNotEmpty)
-                  const SizedBox(height: 24),
-                // Suggested follow-up questions
-                _buildFollowUpQuestions(result),
+                // Part 4: Suggested Conversation Starters
+                _buildConversationStarters(result),
                 const SizedBox(height: 32),
                 // Action buttons
                 _buildActionButtons(),
@@ -345,6 +343,43 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
                     fontWeight: FontWeight.bold,
                   ),
               textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Part 4: Executive Summary Block
+  Widget _buildExecutiveSummary() {
+    return Card(
+      elevation: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.summarize_outlined,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Executive Summary',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Based on your responses, there are areas where clarification or follow-up discussion may be helpful. This does not determine compliance. It highlights topics where interpretation or implementation may benefit from confirmation.',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    height: 1.6,
+                  ),
             ),
           ],
         ),
@@ -431,54 +466,22 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
     );
   }
 
-  Widget _buildSummaryCard(AccessControlReflectionResult result) {
-    return Card(
-      elevation: 1,
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.summarize_outlined,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  'Summary',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              result.summaryText,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    height: 1.6,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildClaritySpectrum(AccessControlReflectionResult result) {
     // Calculate the fill level based on clarity (no percentages shown)
     // Part 4: Display neutral clarity bar [ ▮▮▮▯▯ ]
     // Use balanced fill levels: 5 (best), 3 (middle), 1 (needs attention)
     int fillLevel;
+    String priorityLabel;
     switch (result.clarityLevel) {
       case ClarityLevel.generallyClear:
         fillLevel = 5;
+        priorityLabel = 'Standard';
       case ClarityLevel.reviewRecommended:
         fillLevel = 3;
+        priorityLabel = 'Elevated';
       case ClarityLevel.earlyClarificationRecommended:
         fillLevel = 1;
+        priorityLabel = 'Focused';
     }
 
     // Build the clarity bar string using Unicode block characters
@@ -493,11 +496,20 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Clarity Indicator',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+            Row(
+              children: [
+                Icon(
+                  Icons.bar_chart_outlined,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Access Control',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             // Neutral clarity bar as specified in Part 4
@@ -511,58 +523,14 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
                     ),
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUncertaintySummary(AccessControlReflectionResult result) {
-    return Card(
-      elevation: 1,
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.help_outline,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  'You indicated uncertainty in:',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            ...result.uncertaintyAreas.map(
-              (area) => Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.circle,
-                      size: 8,
-                      color: Theme.of(context).colorScheme.secondary,
+            const SizedBox(height: 12),
+            // Clarification Priority label
+            Center(
+              child: Text(
+                'Clarification Priority: $priorityLabel',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        area,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              height: 1.4,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ),
           ],
@@ -571,7 +539,8 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
     );
   }
 
-  Widget _buildFollowUpQuestions(AccessControlReflectionResult result) {
+  /// Part 4: "Why This Matters" section
+  Widget _buildWhyThisMattersCard() {
     return Card(
       elevation: 1,
       child: Padding(
@@ -582,12 +551,12 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
             Row(
               children: [
                 Icon(
-                  Icons.lightbulb_outline,
-                  color: Theme.of(context).colorScheme.tertiary,
+                  Icons.info_outline,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'Suggested Internal Follow-Up Questions:',
+                  'Why This Matters',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -595,8 +564,66 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            ...result.suggestedFollowUpQuestions.map(
-              (question) => Padding(
+            Text(
+              'Access control decisions influence authentication, auditing, and incident response safeguards. Uncertainty in this area can lead to delayed access removal, unintended exposure, or inconsistent application of safeguards.',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    height: 1.6,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Part 4: Suggested Conversation Starters
+  Widget _buildConversationStarters(AccessControlReflectionResult result) {
+    // Use the specific conversation starters from requirements
+    const conversationStarters = [
+      'Who formally approves CJIS access requests?',
+      'Is remote access protected consistently across users?',
+      'Is access removal documented and time-bound?',
+      'Would leadership and IT describe this process the same way?',
+    ];
+
+    return Card(
+      elevation: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.forum_outlined,
+                  color: Theme.of(context).colorScheme.tertiary,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Suggested Conversation Starters',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'You may want to discuss the following with your IT provider or CJIS administrator:',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    height: 1.4,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.7),
+                  ),
+            ),
+            const SizedBox(height: 16),
+            ...conversationStarters.map(
+              (starter) => Padding(
                 padding: const EdgeInsets.only(bottom: 12.0),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -609,7 +636,7 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        question,
+                        starter,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               height: 1.4,
                             ),
