@@ -117,9 +117,9 @@ void main() {
     });
 
     test('getQuestionById returns correct question', () {
-      final question = AccessControlData.getQuestionById('ac_baseline_1');
+      final question = AccessControlData.getQuestionById('ac_governance');
       expect(question, isNotNull);
-      expect(question!.id, equals('ac_baseline_1'));
+      expect(question!.id, equals('ac_governance'));
     });
 
     test('getQuestionById returns null for non-existent question', () {
@@ -128,13 +128,17 @@ void main() {
     });
 
     test('Follow-up questions exist for each category', () {
+      expect(AccessControlData.followUpQuestionsByArea['governance'],
+          isNotNull);
       expect(AccessControlData.followUpQuestionsByArea['responsibility'],
           isNotNull);
-      expect(AccessControlData.followUpQuestionsByArea['access_changes'],
+      expect(AccessControlData.followUpQuestionsByArea['access_removal'],
           isNotNull);
       expect(AccessControlData.followUpQuestionsByArea['remote_access'],
           isNotNull);
-      expect(AccessControlData.followUpQuestionsByArea['individual_access'],
+      expect(AccessControlData.followUpQuestionsByArea['mixed_use'],
+          isNotNull);
+      expect(AccessControlData.followUpQuestionsByArea['reflection'],
           isNotNull);
     });
 
@@ -351,6 +355,169 @@ void main() {
             reason: '${priority.name} should not use "severe"');
         expect(priority.explanation.toLowerCase().contains('fail'), isFalse,
             reason: '${priority.name} should not use "fail"');
+      }
+    });
+  });
+
+  group('Layered Adaptive Model Tests', () {
+    test('InterpretationClarity enum has expected values', () {
+      expect(InterpretationClarity.values.length, equals(2));
+      expect(InterpretationClarity.generallyClear.displayText,
+          equals('Generally Clear'));
+      expect(InterpretationClarity.reviewRecommended.displayText,
+          equals('Review Recommended'));
+    });
+
+    test('ImplementationReadiness enum has expected values', () {
+      expect(ImplementationReadiness.values.length, equals(2));
+      expect(ImplementationReadiness.generallyClear.displayText,
+          equals('Generally Clear'));
+      expect(ImplementationReadiness.earlyClarificationRecommended.displayText,
+          equals('Early Clarification Recommended'));
+    });
+
+    test('AccessControlOption supports layered signal flags', () {
+      const option = AccessControlOption(
+        text: 'Test option',
+        interpretationUncertainty: true,
+        implementationUncertainty: true,
+        foundationalFlag: true,
+      );
+
+      expect(option.interpretationUncertainty, isTrue);
+      expect(option.implementationUncertainty, isTrue);
+      expect(option.foundationalFlag, isTrue);
+    });
+
+    test('AccessControlResponse tracks layered signal flags', () {
+      const response = AccessControlResponse(
+        questionId: 'q1',
+        questionText: 'Test question?',
+        selectedOptionText: 'Test answer',
+        interpretationUncertainty: true,
+        implementationUncertainty: true,
+        foundationalFlag: true,
+      );
+
+      expect(response.interpretationUncertainty, isTrue);
+      expect(response.implementationUncertainty, isTrue);
+      expect(response.foundationalFlag, isTrue);
+    });
+
+    test('Result includes interpretation clarity indicator', () {
+      final responses = [
+        const AccessControlResponse(
+          questionId: 'q1',
+          questionText: 'Question 1?',
+          selectedOptionText: 'Uncertain',
+          interpretationUncertainty: true,
+        ),
+        const AccessControlResponse(
+          questionId: 'q2',
+          questionText: 'Question 2?',
+          selectedOptionText: 'Also uncertain',
+          interpretationUncertainty: true,
+        ),
+      ];
+
+      final result = AccessControlData.calculateResult(responses);
+
+      // With 2+ interpretation uncertainties, should recommend review
+      expect(result.interpretationClarity,
+          equals(InterpretationClarity.reviewRecommended));
+    });
+
+    test('Result includes implementation readiness indicator', () {
+      final responses = [
+        const AccessControlResponse(
+          questionId: 'q1',
+          questionText: 'Question 1?',
+          selectedOptionText: 'Uncertain',
+          implementationUncertainty: true,
+        ),
+        const AccessControlResponse(
+          questionId: 'q2',
+          questionText: 'Question 2?',
+          selectedOptionText: 'Also uncertain',
+          implementationUncertainty: true,
+        ),
+      ];
+
+      final result = AccessControlData.calculateResult(responses);
+
+      // With 2+ implementation uncertainties, should recommend early clarification
+      expect(result.implementationReadiness,
+          equals(ImplementationReadiness.earlyClarificationRecommended));
+    });
+
+    test('Foundational flag triggers early clarification', () {
+      final responses = [
+        const AccessControlResponse(
+          questionId: 'q1',
+          questionText: 'Question 1?',
+          selectedOptionText: 'Foundational concern',
+          foundationalFlag: true,
+        ),
+      ];
+
+      final result = AccessControlData.calculateResult(responses);
+
+      // Foundational flag should trigger early clarification regardless of count
+      expect(result.implementationReadiness,
+          equals(ImplementationReadiness.earlyClarificationRecommended));
+    });
+
+    test('Questions include layered model signal flags', () {
+      final allOptions =
+          AccessControlData.questions.expand((q) => q.options).toList();
+      
+      // Check that some options have interpretation uncertainty flags
+      final interpretationOptions =
+          allOptions.where((o) => o.interpretationUncertainty).toList();
+      expect(interpretationOptions, isNotEmpty,
+          reason: 'Some options should have interpretationUncertainty flag');
+      
+      // Check that some options have implementation uncertainty flags
+      final implementationOptions =
+          allOptions.where((o) => o.implementationUncertainty).toList();
+      expect(implementationOptions, isNotEmpty,
+          reason: 'Some options should have implementationUncertainty flag');
+      
+      // Check that some options have foundational flags
+      final foundationalOptions =
+          allOptions.where((o) => o.foundationalFlag).toList();
+      expect(foundationalOptions, isNotEmpty,
+          reason: 'Some options should have foundationalFlag');
+    });
+
+    test('Summary text avoids prohibited words', () {
+      final responses = [
+        const AccessControlResponse(
+          questionId: 'q1',
+          questionText: 'Question 1?',
+          selectedOptionText: 'Uncertain answer',
+          indicatesUncertainty: true,
+          interpretationUncertainty: true,
+          implementationUncertainty: true,
+          foundationalFlag: true,
+        ),
+      ];
+
+      final result = AccessControlData.calculateResult(responses);
+
+      // Check that summary doesn't contain prohibited words
+      final prohibitedWords = [
+        'non-compliant',
+        'violation',
+        'fail',
+        'audit finding',
+        'risk score',
+      ];
+
+      for (final word in prohibitedWords) {
+        expect(result.summaryText.toLowerCase().contains(word.toLowerCase()),
+            isFalse,
+            reason: 'Summary should not contain prohibited word "$word"');
       }
     });
   });

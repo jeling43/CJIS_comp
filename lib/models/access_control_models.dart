@@ -55,6 +55,14 @@ class AccessControlOption {
   final bool indicatesUncertainty;
   final bool indicatesSharedResponsibility;
   final String? uncertaintyArea;
+  
+  /// Layered adaptive model signal flags
+  /// interpretationUncertainty: Signals user is unsure about policy interpretation
+  final bool interpretationUncertainty;
+  /// implementationUncertainty: Signals user is unsure about operational implementation
+  final bool implementationUncertainty;
+  /// foundationalFlag: Signals a foundational area that affects other controls
+  final bool foundationalFlag;
 
   const AccessControlOption({
     required this.text,
@@ -62,6 +70,9 @@ class AccessControlOption {
     this.indicatesUncertainty = false,
     this.indicatesSharedResponsibility = false,
     this.uncertaintyArea,
+    this.interpretationUncertainty = false,
+    this.implementationUncertainty = false,
+    this.foundationalFlag = false,
   });
 }
 
@@ -73,6 +84,11 @@ class AccessControlResponse {
   final bool indicatesUncertainty;
   final bool indicatesSharedResponsibility;
   final String? uncertaintyArea;
+  
+  /// Layered adaptive model signal flags
+  final bool interpretationUncertainty;
+  final bool implementationUncertainty;
+  final bool foundationalFlag;
 
   const AccessControlResponse({
     required this.questionId,
@@ -81,7 +97,28 @@ class AccessControlResponse {
     this.indicatesUncertainty = false,
     this.indicatesSharedResponsibility = false,
     this.uncertaintyArea,
+    this.interpretationUncertainty = false,
+    this.implementationUncertainty = false,
+    this.foundationalFlag = false,
   });
+}
+
+/// Interpretation clarity indicator - Part 4 requirement
+enum InterpretationClarity {
+  generallyClear('Generally Clear'),
+  reviewRecommended('Review Recommended');
+
+  final String displayText;
+  const InterpretationClarity(this.displayText);
+}
+
+/// Implementation readiness indicator - Part 4 requirement
+enum ImplementationReadiness {
+  generallyClear('Generally Clear'),
+  earlyClarificationRecommended('Early Clarification Recommended');
+
+  final String displayText;
+  const ImplementationReadiness(this.displayText);
 }
 
 /// Result from the Access Control reflection flow
@@ -91,6 +128,15 @@ class AccessControlReflectionResult {
   final List<String> uncertaintyAreas;
   final List<String> suggestedFollowUpQuestions;
   final String summaryText;
+  
+  /// Part 4 indicators - displayed on results screen
+  final InterpretationClarity interpretationClarity;
+  final ImplementationReadiness implementationReadiness;
+  
+  /// Internal counts (hidden from user per Part 3)
+  final int interpretationUncertaintyCount;
+  final int implementationUncertaintyCount;
+  final bool hasFoundationalFlag;
 
   const AccessControlReflectionResult({
     required this.clarityLevel,
@@ -98,5 +144,10 @@ class AccessControlReflectionResult {
     required this.uncertaintyAreas,
     required this.suggestedFollowUpQuestions,
     required this.summaryText,
+    required this.interpretationClarity,
+    required this.implementationReadiness,
+    this.interpretationUncertaintyCount = 0,
+    this.implementationUncertaintyCount = 0,
+    this.hasFoundationalFlag = false,
   });
 }
