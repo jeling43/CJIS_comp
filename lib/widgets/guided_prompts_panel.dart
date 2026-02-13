@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/guidance_models.dart';
 
-/// Widget that displays guided prompts for self-assessment and discovery.
+/// Collapsible widget that displays guided prompts for self-assessment and discovery.
 /// Questions are designed to surface assumptions, clarify responsibility,
 /// and highlight common risk areas without requiring technical knowledge.
 class GuidedPromptsPanel extends StatefulWidget {
@@ -19,77 +19,108 @@ class GuidedPromptsPanel extends StatefulWidget {
 class _GuidedPromptsPanelState extends State<GuidedPromptsPanel> {
   final Set<int> _expandedSections = {};
   bool _showRiskContext = false;
+  bool _isPanelExpanded = false;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Row(
-              children: [
-                Icon(
-                  Icons.question_answer,
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 28,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'Guided Prompts',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            // Introduction
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
-              ),
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () {
+              setState(() {
+                _isPanelExpanded = !_isPanelExpanded;
+              });
+            },
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(
-                    Icons.info_outline,
+                    Icons.question_answer,
                     color: Theme.of(context).colorScheme.primary,
-                    size: 20,
+                    size: 28,
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      widget.prompts.introduction,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            height: 1.5,
-                            fontStyle: FontStyle.italic,
+                      'Guided Prompts',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
                     ),
+                  ),
+                  Icon(
+                    _isPanelExpanded ? Icons.expand_less : Icons.expand_more,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 28,
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-            // Question sections
-            ...widget.prompts.sections.asMap().entries.map(
-                  (entry) => _buildQuestionSection(entry.key, entry.value),
-                ),
-            const SizedBox(height: 20),
-            // Risk Context toggle
-            _buildRiskContextSection(),
-            const SizedBox(height: 16),
-            // Policy Reference
-            _buildPolicyReference(),
-          ],
-        ),
+          ),
+          AnimatedCrossFade(
+            firstChild: const SizedBox(width: double.infinity),
+            secondChild: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Divider(),
+                  const SizedBox(height: 12),
+                  // Introduction
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: Theme.of(context).colorScheme.primary,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            widget.prompts.introduction,
+                            style:
+                                Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      height: 1.5,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // Question sections
+                  ...widget.prompts.sections.asMap().entries.map(
+                        (entry) =>
+                            _buildQuestionSection(entry.key, entry.value),
+                      ),
+                  const SizedBox(height: 20),
+                  // Risk Context toggle
+                  _buildRiskContextSection(),
+                  const SizedBox(height: 16),
+                  // Policy Reference
+                  _buildPolicyReference(),
+                ],
+              ),
+            ),
+            crossFadeState: _isPanelExpanded
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            duration: const Duration(milliseconds: 300),
+          ),
+        ],
       ),
     );
   }
