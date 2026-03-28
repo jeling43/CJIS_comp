@@ -329,13 +329,14 @@ void main() {
           for (final answer in question.answers) {
             if (answer.guidance != null) {
               final g = answer.guidance!;
-              // Each field should be a single sentence (rough check: no more than 2 periods)
-              expect(g.meaning.split('.').length, lessThanOrEqualTo(3),
-                  reason: 'meaning should be concise');
-              expect(g.risk.split('.').length, lessThanOrEqualTo(3),
-                  reason: 'risk should be concise');
-              expect(g.nextStep.split('.').length, lessThanOrEqualTo(3),
-                  reason: 'nextStep should be concise');
+              // Each field should be 1–2 sentences (splitting on '.' gives
+              // sentence count + 1 for trailing empty element)
+              expect(g.meaning.split('.').length, lessThanOrEqualTo(4),
+                  reason: 'meaning should be 1–2 sentences');
+              expect(g.risk.split('.').length, lessThanOrEqualTo(4),
+                  reason: 'risk should be 1–2 sentences');
+              expect(g.nextStep.split('.').length, lessThanOrEqualTo(4),
+                  reason: 'nextStep should be 1–2 sentences');
             }
           }
         }

@@ -77,6 +77,29 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
     setState(() => _current = question);
   }
 
+  // ─── Diagnostic flag defaults ───────────────────────────────────────────
+
+  static const _defaultNextStep =
+      'Investigate this area and document your findings.';
+
+  static const _flagMeanings = <String, String>{
+    'Lack of visibility in this area':
+        'You may not have full visibility into how this area operates.',
+    'Responsibility is unclear':
+        'It is not clear who is responsible for this area.',
+    'Control may not be consistently enforced':
+        'A control may exist but is not being followed consistently.',
+  };
+
+  static const _flagRisks = <String, String>{
+    'Lack of visibility in this area':
+        'Hidden gaps can go unnoticed until an incident or audit.',
+    'Responsibility is unclear':
+        'Without clear ownership, issues are less likely to be addressed.',
+    'Control may not be consistently enforced':
+        'Inconsistent controls create exploitable gaps.',
+  };
+
   /// Handle the user selecting an answer
   void _selectAnswer(int answerIndex) {
     final question = _current;
@@ -106,9 +129,11 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
       _collectedDiagnostics.add(DiagnosticEntry(
         questionId: question.id,
         guidance: GuidanceItem(
-          meaning: _flagToMeaning(answer.diagnosticFlag!),
-          risk: _flagToRisk(answer.diagnosticFlag!),
-          nextStep: 'Investigate this area and document your findings.',
+          meaning: _flagMeanings[answer.diagnosticFlag!] ??
+              'This area may need further review.',
+          risk: _flagRisks[answer.diagnosticFlag!] ??
+              'Unresolved uncertainty increases overall risk.',
+          nextStep: _defaultNextStep,
         ),
         diagnosticFlag: answer.diagnosticFlag,
       ));
@@ -120,34 +145,6 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
     }
 
     _advance();
-  }
-
-  /// Map a diagnostic flag to a default meaning sentence
-  static String _flagToMeaning(String flag) {
-    switch (flag) {
-      case 'Lack of visibility in this area':
-        return 'You may not have full visibility into how this area operates.';
-      case 'Responsibility is unclear':
-        return 'It is not clear who is responsible for this area.';
-      case 'Control may not be consistently enforced':
-        return 'A control may exist but is not being followed consistently.';
-      default:
-        return 'This area may need further review.';
-    }
-  }
-
-  /// Map a diagnostic flag to a default risk sentence
-  static String _flagToRisk(String flag) {
-    switch (flag) {
-      case 'Lack of visibility in this area':
-        return 'Hidden gaps can go unnoticed until an incident or audit.';
-      case 'Responsibility is unclear':
-        return 'Without clear ownership, issues are less likely to be addressed.';
-      case 'Control may not be consistently enforced':
-        return 'Inconsistent controls create exploitable gaps.';
-      default:
-        return 'Unresolved uncertainty increases overall risk.';
-    }
   }
 
   /// Go back one step
