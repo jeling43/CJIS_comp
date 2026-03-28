@@ -395,8 +395,19 @@ class _GuidanceFlowScreenState extends State<GuidanceFlowScreen> {
                       '/categories',
                       (route) => false,
                     ),
+                    icon: const Icon(Icons.menu_book_outlined),
+                    label: const Text('Return to Reference Library'),
+                  ),
+                ),
+                Center(
+                  child: TextButton.icon(
+                    onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/roles',
+                      (route) => false,
+                    ),
                     icon: const Icon(Icons.home),
-                    label: const Text('Return to All Categories'),
+                    label: const Text('Back to guided tool'),
                   ),
                 ),
               ],

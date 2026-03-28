@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'screens/disclaimer_screen.dart';
 import 'screens/role_selection_screen.dart';
 import 'screens/domain_selection_screen.dart';
 import 'screens/question_flow_screen.dart';
+import 'screens/categories_screen.dart';
+import 'screens/category_detail_screen.dart';
+import 'screens/guidance_flow_screen.dart';
+import 'screens/access_control_entry_screen.dart';
+import 'screens/access_control_flow_screen.dart';
 
 class CJISComplianceApp extends StatelessWidget {
   const CJISComplianceApp({super.key});
@@ -19,9 +25,17 @@ class CJISComplianceApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const RoleSelectionScreen(),
+        // Primary flow: Disclaimer → Role → Domain → Question
+        '/': (context) => const DisclaimerScreen(),
+        '/roles': (context) => const RoleSelectionScreen(),
         '/domains': (context) => const DomainSelectionScreen(),
         '/question-flow': (context) => const QuestionFlowScreen(),
+        // Secondary reference section (not part of main flow)
+        '/categories': (context) => const CategoriesScreen(),
+        '/category-detail': (context) => const CategoryDetailScreen(),
+        '/guidance-flow': (context) => const GuidanceFlowScreen(),
+        '/access-control': (context) => const AccessControlEntryScreen(),
+        '/access-control-flow': (context) => const AccessControlFlowScreen(),
       },
     );
   }

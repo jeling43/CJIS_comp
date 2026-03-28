@@ -690,8 +690,17 @@ class _AccessControlFlowScreenState extends State<AccessControlFlowScreen> {
             '/categories',
             (route) => false,
           ),
+          icon: const Icon(Icons.menu_book_outlined),
+          label: const Text('Return to Reference Library'),
+        ),
+        TextButton.icon(
+          onPressed: () => Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/roles',
+            (route) => false,
+          ),
           icon: const Icon(Icons.home),
-          label: const Text('Return to All Categories'),
+          label: const Text('Back to guided tool'),
         ),
       ],
     );

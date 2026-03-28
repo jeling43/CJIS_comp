@@ -337,7 +337,7 @@ class CategoryDetailScreen extends StatelessWidget {
                     child: TextButton.icon(
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.arrow_back),
-                      label: const Text('Back to Categories'),
+                      label: const Text('Back to Reference Library'),
                     ),
                   ),
                 ],

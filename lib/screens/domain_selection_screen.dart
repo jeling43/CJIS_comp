@@ -45,9 +45,26 @@ class DomainSelectionScreen extends StatelessWidget {
                 const SizedBox(height: 32),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/');
+                    Navigator.pushReplacementNamed(context, '/roles');
                   },
                   child: const Text('Change role'),
+                ),
+                const SizedBox(height: 8),
+                TextButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/categories');
+                  },
+                  icon: Icon(
+                    Icons.menu_book_outlined,
+                    size: 16,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                  label: Text(
+                    'Reference Library',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                  ),
                 ),
               ],
             ),
