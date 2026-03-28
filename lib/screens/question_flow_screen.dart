@@ -29,8 +29,8 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
   /// Primary question step index (1-based) corresponding to the current question
   int _currentPrimaryStep = 0;
 
-  /// Guidance items collected from notable answers
-  final List<GuidanceItem> _collectedGuidance = [];
+  /// Diagnostic entries collected from notable answers (guidance + flags)
+  final List<DiagnosticEntry> _collectedDiagnostics = [];
 
   /// Whether the flow has completed and guidance should be shown
   bool _done = false;
@@ -77,6 +77,29 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
     setState(() => _current = question);
   }
 
+  // ─── Diagnostic flag defaults ───────────────────────────────────────────
+
+  static const _defaultNextStep =
+      'Investigate this area and document your findings.';
+
+  static const _flagMeanings = <String, String>{
+    'Lack of visibility in this area':
+        'You may not have full visibility into how this area operates.',
+    'Responsibility is unclear':
+        'It is not clear who is responsible for this area.',
+    'Control may not be consistently enforced':
+        'A control may exist but is not being followed consistently.',
+  };
+
+  static const _flagRisks = <String, String>{
+    'Lack of visibility in this area':
+        'Hidden gaps can go unnoticed until an incident or audit.',
+    'Responsibility is unclear':
+        'Without clear ownership, issues are less likely to be addressed.',
+    'Control may not be consistently enforced':
+        'Inconsistent controls create exploitable gaps.',
+  };
+
   /// Handle the user selecting an answer
   void _selectAnswer(int answerIndex) {
     final question = _current;
@@ -90,13 +113,30 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
       answerIndex: answerIndex,
       queueSnapshot: List.of(_queue),
       primaryStep: _currentPrimaryStep,
-      guidanceSnapshot: List.of(_collectedGuidance),
+      diagnosticsSnapshot: List.of(_collectedDiagnostics),
       wasDone: _done,
     ));
 
-    // Collect guidance if this answer has one
+    // Collect diagnostic entry if this answer has guidance or a diagnostic flag
     if (answer.guidance != null) {
-      _collectedGuidance.add(answer.guidance!);
+      _collectedDiagnostics.add(DiagnosticEntry(
+        questionId: question.id,
+        guidance: answer.guidance!,
+        diagnosticFlag: answer.diagnosticFlag,
+      ));
+    } else if (answer.diagnosticFlag != null) {
+      // Flag without guidance — create a minimal diagnostic entry
+      _collectedDiagnostics.add(DiagnosticEntry(
+        questionId: question.id,
+        guidance: GuidanceItem(
+          meaning: _flagMeanings[answer.diagnosticFlag!] ??
+              'This area may need further review.',
+          risk: _flagRisks[answer.diagnosticFlag!] ??
+              'Unresolved uncertainty increases overall risk.',
+          nextStep: _defaultNextStep,
+        ),
+        diagnosticFlag: answer.diagnosticFlag,
+      ));
     }
 
     // Inject follow-up question at front of queue if present
@@ -119,12 +159,27 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
       _current = question;
       _queue = List.of(entry.queueSnapshot);
       _currentPrimaryStep = entry.primaryStep;
-      // Restore guidance to snapshot
-      _collectedGuidance
+      // Restore diagnostics to snapshot
+      _collectedDiagnostics
         ..clear()
-        ..addAll(entry.guidanceSnapshot);
+        ..addAll(entry.diagnosticsSnapshot);
       _done = entry.wasDone;
     });
+  }
+
+  // ─── Combined insight detection ──────────────────────────────────────────
+
+  /// Return combined insights whose trigger questions were all flagged
+  List<String> _getMatchingCombinedInsights() {
+    final flaggedQuestionIds =
+        _collectedDiagnostics.map((d) => d.questionId).toSet();
+    final matched = <String>[];
+    for (final ci in _flow.combinedInsights) {
+      if (ci.triggerQuestionIds.every(flaggedQuestionIds.contains)) {
+        matched.add(ci.insight);
+      }
+    }
+    return matched;
   }
 
   // ─── Build ──────────────────────────────────────────────────────────────
@@ -203,9 +258,16 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
   // ─── Guidance summary ────────────────────────────────────────────────────
 
   Widget _buildGuidanceSummary() {
-    final items = _collectedGuidance.isNotEmpty
-        ? _collectedGuidance
-        : [_flow.defaultGuidance];
+    final hasEntries = _collectedDiagnostics.isNotEmpty;
+    final diagnosticEntries = hasEntries
+        ? _collectedDiagnostics
+        : [
+            DiagnosticEntry(
+              questionId: '',
+              guidance: _flow.defaultGuidance,
+            ),
+          ];
+    final combinedInsights = hasEntries ? _getMatchingCombinedInsights() : <String>[];
 
     return SingleChildScrollView(
       child: Column(
@@ -225,10 +287,25 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
                 ),
           ),
           const SizedBox(height: 24),
-          ...items.map((g) => Padding(
+
+          // Combined insights (if any)
+          if (combinedInsights.isNotEmpty) ...[
+            ...combinedInsights.map((insight) => Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: _CombinedInsightCard(insight: insight),
+                )),
+            const SizedBox(height: 8),
+          ],
+
+          // Individual diagnostic cards
+          ...diagnosticEntries.map((entry) => Padding(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: _GuidanceCard(item: g),
+                child: _GuidanceCard(
+                  item: entry.guidance,
+                  diagnosticFlag: entry.diagnosticFlag,
+                ),
               )),
+
           const SizedBox(height: 32),
           OutlinedButton(
             style: OutlinedButton.styleFrom(
@@ -265,7 +342,7 @@ class _HistoryEntry {
   final int answerIndex;
   final List<String> queueSnapshot;
   final int primaryStep;
-  final List<GuidanceItem> guidanceSnapshot;
+  final List<DiagnosticEntry> diagnosticsSnapshot;
   final bool wasDone;
 
   _HistoryEntry({
@@ -273,7 +350,7 @@ class _HistoryEntry {
     required this.answerIndex,
     required this.queueSnapshot,
     required this.primaryStep,
-    required this.guidanceSnapshot,
+    required this.diagnosticsSnapshot,
     required this.wasDone,
   });
 }
@@ -402,7 +479,8 @@ class _AnswerButton extends StatelessWidget {
 
 class _GuidanceCard extends StatelessWidget {
   final GuidanceItem item;
-  const _GuidanceCard({required this.item});
+  final String? diagnosticFlag;
+  const _GuidanceCard({required this.item, this.diagnosticFlag});
 
   @override
   Widget build(BuildContext context) {
@@ -416,25 +494,120 @@ class _GuidanceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // Diagnostic flag badge
+          if (diagnosticFlag != null)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                color: scheme.errorContainer.withOpacity(0.5),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.flag_outlined, size: 16, color: scheme.error),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      diagnosticFlag!,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: scheme.error,
+                            fontWeight: FontWeight.w700,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           _GuidanceRow(
             icon: Icons.lightbulb_outline,
-            label: 'Meaning',
+            label: 'What this means',
             text: item.meaning,
             color: scheme.primary,
           ),
           Divider(height: 1, color: scheme.outlineVariant),
           _GuidanceRow(
             icon: Icons.warning_amber_outlined,
-            label: 'Risk',
+            label: 'Why it matters',
             text: item.risk,
             color: scheme.error,
           ),
           Divider(height: 1, color: scheme.outlineVariant),
           _GuidanceRow(
             icon: Icons.arrow_forward_outlined,
-            label: 'Next step',
+            label: 'What to do next',
             text: item.nextStep,
             color: scheme.tertiary,
+          ),
+          // CJIS reference (shown only in summary, never during questions)
+          if (item.cjisReference != null) ...[
+            Divider(height: 1, color: scheme.outlineVariant),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Row(
+                children: [
+                  Icon(Icons.policy_outlined, size: 16, color: scheme.onSurfaceVariant),
+                  const SizedBox(width: 8),
+                  Text(
+                    item.cjisReference!,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Card for combined diagnostic insights
+class _CombinedInsightCard extends StatelessWidget {
+  final String insight;
+  const _CombinedInsightCard({required this.insight});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: scheme.tertiaryContainer.withOpacity(0.4),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: scheme.tertiary.withOpacity(0.3)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.insights, size: 22, color: scheme.tertiary),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Combined insight',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: scheme.tertiary,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.8,
+                      ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  insight,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

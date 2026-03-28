@@ -48,10 +48,14 @@ class FlowAnswer {
   /// Guidance triggered when the user selects this answer (collected for the summary)
   final GuidanceItem? guidance;
 
+  /// Diagnostic flag surfaced in the summary (e.g. "Lack of visibility in this area")
+  final String? diagnosticFlag;
+
   const FlowAnswer({
     required this.text,
     this.followUpQuestionId,
     this.guidance,
+    this.diagnosticFlag,
   });
 }
 
@@ -61,10 +65,41 @@ class GuidanceItem {
   final String risk;
   final String nextStep;
 
+  /// Related CJIS reference shown only in the summary (e.g. "CJIS 5.6.2.2")
+  final String? cjisReference;
+
   const GuidanceItem({
     required this.meaning,
     required this.risk,
     required this.nextStep,
+    this.cjisReference,
+  });
+}
+
+/// A diagnostic entry collected during the flow
+class DiagnosticEntry {
+  final String questionId;
+  final GuidanceItem guidance;
+  final String? diagnosticFlag;
+
+  const DiagnosticEntry({
+    required this.questionId,
+    required this.guidance,
+    this.diagnosticFlag,
+  });
+}
+
+/// A combined insight generated when multiple related risks appear together
+class CombinedInsight {
+  /// Question IDs that must each have triggered guidance for this insight to apply
+  final Set<String> triggerQuestionIds;
+
+  /// The combined insight text
+  final String insight;
+
+  const CombinedInsight({
+    required this.triggerQuestionIds,
+    required this.insight,
   });
 }
 
@@ -81,11 +116,15 @@ class DomainFlow {
   /// Guidance shown when no notable answers were collected
   final GuidanceItem defaultGuidance;
 
+  /// Combined insights surfaced when multiple related risks are present
+  final List<CombinedInsight> combinedInsights;
+
   const DomainFlow({
     required this.domainId,
     required this.primaryQuestionIds,
     required this.questions,
     required this.defaultGuidance,
+    this.combinedInsights = const [],
   });
 
   int get totalPrimarySteps => primaryQuestionIds.length;
