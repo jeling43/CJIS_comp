@@ -2,14 +2,6 @@ import '../models/question_models.dart';
 
 /// Predefined question flows for Access Control and Authentication & MFA
 class QuestionData {
-  // ─── Roles ────────────────────────────────────────────────────────────────
-
-  static const List<UserRole> roles = [
-    UserRole(id: 'le_admin', label: 'Law Enforcement Admin'),
-    UserRole(id: 'it', label: 'IT / County IT'),
-    UserRole(id: 'command', label: 'Command Staff'),
-  ];
-
   // ─── Domains ──────────────────────────────────────────────────────────────
 
   static const List<Domain> domains = [

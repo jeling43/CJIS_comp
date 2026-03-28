@@ -72,7 +72,7 @@ class DisclaimerScreen extends StatelessWidget {
                   width: double.infinity,
                   child: FilledButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/roles');
+                      Navigator.pushReplacementNamed(context, '/domains');
                     },
                     style: FilledButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 18),
