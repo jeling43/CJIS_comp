@@ -9,8 +9,13 @@ class CategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CJIS Guidance Categories'),
+        title: const Text('CJIS Reference Library'),
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+          tooltip: 'Back',
+        ),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -45,7 +50,7 @@ class CategoriesScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Select a Category',
+                                  'Reference Library',
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleLarge
@@ -55,7 +60,7 @@ class CategoriesScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Choose a guidance category to explore CJIS compliance requirements and best practices. Each category provides decision-guided questions to help assess your current posture.',
+                                  'Browse CJIS compliance categories and best practices for reference. For guided assessment, use the main tool.',
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               ],

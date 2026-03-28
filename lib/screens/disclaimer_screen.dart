@@ -138,7 +138,7 @@ class DisclaimerScreen extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.pushReplacementNamed(
-                                  context, '/categories');
+                                  context, '/roles');
                             },
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(

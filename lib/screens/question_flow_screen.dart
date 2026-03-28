@@ -241,6 +241,17 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
             },
             child: const Text('Explore another area'),
           ),
+          const SizedBox(height: 12),
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/roles',
+                (_) => false,
+              );
+            },
+            child: const Text('Start over'),
+          ),
         ],
       ),
     );

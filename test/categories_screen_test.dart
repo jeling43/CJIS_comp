@@ -12,7 +12,7 @@ void main() {
         ),
       );
 
-      expect(find.text('CJIS Guidance Categories'), findsOneWidget);
+      expect(find.text('CJIS Reference Library'), findsOneWidget);
     });
 
     testWidgets('Should display all categories', (WidgetTester tester) async {
@@ -57,7 +57,7 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.text('Select a Category'), findsOneWidget);
+      expect(find.text('Reference Library'), findsOneWidget);
     });
 
     testWidgets('Categories should be tappable', (WidgetTester tester) async {
