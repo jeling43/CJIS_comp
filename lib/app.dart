@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'screens/disclaimer_screen.dart';
-import 'screens/categories_screen.dart';
-import 'screens/category_detail_screen.dart';
-import 'screens/guidance_flow_screen.dart';
-import 'screens/access_control_entry_screen.dart';
-import 'screens/access_control_flow_screen.dart';
+import 'screens/role_selection_screen.dart';
+import 'screens/domain_selection_screen.dart';
+import 'screens/question_flow_screen.dart';
 
 class CJISComplianceApp extends StatelessWidget {
   const CJISComplianceApp({super.key});
@@ -12,23 +9,19 @@ class CJISComplianceApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CJIS Compliance Guidance Tool',
+      title: 'CJIS Guidance',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
+          seedColor: const Color(0xFF1565C0),
           brightness: Brightness.light,
         ),
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const DisclaimerScreen(),
-        '/categories': (context) => const CategoriesScreen(),
-        '/category-detail': (context) => const CategoryDetailScreen(),
-        '/guidance-flow': (context) => const GuidanceFlowScreen(),
-        '/access-control': (context) => const AccessControlEntryScreen(),
-        '/access-control-flow': (context) => const AccessControlFlowScreen(),
+        '/': (context) => const RoleSelectionScreen(),
+        '/domains': (context) => const DomainSelectionScreen(),
+        '/question-flow': (context) => const QuestionFlowScreen(),
       },
     );
   }
