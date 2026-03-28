@@ -20,7 +20,6 @@ class _GuidanceFlowScreenState extends State<GuidanceFlowScreen> {
     super.didChangeDependencies();
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args == null || args is! String) {
-      // If no arguments or invalid type, navigate back
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.of(context).pop();
       });
@@ -68,352 +67,236 @@ class _GuidanceFlowScreenState extends State<GuidanceFlowScreen> {
     final category = GuidanceData.getCategoryById(categoryId);
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: Text(category?.title ?? 'Guidance'),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          category?.title ?? 'Guidance',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+        centerTitle: false,
       ),
-      body: result != null ? _buildResultView() : _buildQuestionView(),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 640),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            child: result != null ? _buildResultView() : _buildQuestionView(),
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildQuestionView() {
     final question = questions[currentQuestionIndex];
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Center(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 800),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Progress indicator
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.quiz,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          'Question ${currentQuestionIndex + 1} of ${questions.length}',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ],
-                    ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Step indicator
+        Row(
+          children: [
+            Text(
+              'Step ${currentQuestionIndex + 1} of ${questions.length}',
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: (currentQuestionIndex + 1) / questions.length,
+                  minHeight: 6,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).colorScheme.primary,
                   ),
                 ),
-                const SizedBox(height: 24),
-                // Question card
-                Card(
-                  elevation: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          question.question,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                height: 1.4,
-                              ),
-                        ),
-                        const SizedBox(height: 32),
-                        ...question.options.map(
-                          (option) => _buildAnswerOption(option),
-                        ),
-                      ],
-                    ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 32),
+        // Question
+        Container(
+          padding: const EdgeInsets.all(28),
+          decoration: BoxDecoration(
+            color: Theme.of(context)
+                .colorScheme
+                .primaryContainer
+                .withOpacity(0.4),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color:
+                  Theme.of(context).colorScheme.primary.withOpacity(0.15),
+              width: 1.5,
+            ),
+          ),
+          child: Text(
+            question.question,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  height: 1.4,
+                ),
+          ),
+        ),
+        const SizedBox(height: 32),
+        // Answer buttons
+        ...question.options.map(
+          (option) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 18, horizontal: 20),
+                  alignment: Alignment.centerLeft,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
+                  side: BorderSide(
+                    color: Theme.of(context).colorScheme.outline,
+                    width: 1.5,
+                  ),
+                  textStyle: Theme.of(context).textTheme.titleMedium,
                 ),
-                const SizedBox(height: 24),
-                TextButton.icon(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.arrow_back),
-                  label: const Text('Back to Category'),
-                ),
-              ],
+                onPressed: () => _handleAnswer(option),
+                child: Text(option.text),
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildAnswerOption(AnswerOption option) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: InkWell(
-        onTap: () => _handleAnswer(option),
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            children: [
-              Icon(
-                Icons.radio_button_unchecked,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  option.text,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        height: 1.5,
-                      ),
-                ),
-              ),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
-              ),
-            ],
-          ),
-        ),
-      ),
+      ],
     );
   }
 
   Widget _buildResultView() {
-    final category = GuidanceData.getCategoryById(categoryId);
-
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Center(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 900),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            result!.title,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 24),
+          // Guidance card with Meaning / Risk / Next Step
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerLow,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                  color: Theme.of(context).colorScheme.outlineVariant),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Header card
-                Card(
-                  color: Theme.of(context).colorScheme.primaryContainer,
-                  child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.assignment_turned_in,
-                          size: 60,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          result!.title,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                        if (result!.policyReference != null) ...[
-                          const SizedBox(height: 12),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              result!.policyReference!,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
+                _buildGuidanceRow(
+                  icon: Icons.lightbulb_outline,
+                  label: 'Meaning',
+                  text: result!.description,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(height: 24),
-                // Description
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Assessment',
-                          style:
-                              Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          result!.description,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(height: 1.6),
-                        ),
-                      ],
-                    ),
+                Divider(
+                    height: 1,
+                    color: Theme.of(context).colorScheme.outlineVariant),
+                if (result!.riskAreas.isNotEmpty)
+                  _buildGuidanceRow(
+                    icon: Icons.warning_amber_outlined,
+                    label: 'Risk',
+                    text: result!.riskAreas.first,
+                    color: Theme.of(context).colorScheme.error,
                   ),
-                ),
-                // Risk areas
-                if (result!.riskAreas.isNotEmpty) ...[
-                  const SizedBox(height: 24),
-                  Text(
-                    'Potential Risk Areas',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                if (result!.riskAreas.isNotEmpty)
+                  Divider(
+                      height: 1,
+                      color: Theme.of(context).colorScheme.outlineVariant),
+                if (result!.recommendations.isNotEmpty)
+                  _buildGuidanceRow(
+                    icon: Icons.arrow_forward_outlined,
+                    label: 'Next step',
+                    text: result!.recommendations.first,
+                    color: Theme.of(context).colorScheme.tertiary,
                   ),
-                  const SizedBox(height: 12),
-                  Card(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .errorContainer
-                        .withOpacity(0.3),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: result!.riskAreas
-                            .map(
-                              (risk) => Padding(
-                                padding: const EdgeInsets.only(bottom: 12.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      Icons.warning,
-                                      color:
-                                          Theme.of(context).colorScheme.error,
-                                      size: 20,
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        risk,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(height: 1.5),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
+              ],
+            ),
+          ),
+          // Optional: collapsed CJIS reference
+          if (result!.policyReference != null) ...[
+            const SizedBox(height: 16),
+            Text(
+              result!.policyReference!,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                ],
-                // Recommendations
-                const SizedBox(height: 24),
+              textAlign: TextAlign.center,
+            ),
+          ],
+          const SizedBox(height: 32),
+          OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+            ),
+            onPressed: _restart,
+            child: const Text('Try again'),
+          ),
+          const SizedBox(height: 12),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Back'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGuidanceRow({
+    required IconData icon,
+    required String label,
+    required String text,
+    required Color color,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 20, color: color),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Text(
-                  'Recommended Actions',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+                  label,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: color,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.8,
                       ),
                 ),
-                const SizedBox(height: 12),
-                ...result!.recommendations.map(
-                  (rec) => Card(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.check_circle_outline,
-                            color: Theme.of(context).colorScheme.primary,
-                            size: 24,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              rec,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(height: 1.5),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
-                // Action buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: _restart,
-                      icon: const Icon(Icons.refresh),
-                      label: const Text('Start Over'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 16,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    OutlinedButton.icon(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.arrow_back),
-                      label: const Text('Back to Category'),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 16,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Center(
-                  child: TextButton.icon(
-                    onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      '/categories',
-                      (route) => false,
-                    ),
-                    icon: const Icon(Icons.menu_book_outlined),
-                    label: const Text('Back to Reference Library'),
-                  ),
-                ),
-                Center(
-                  child: TextButton.icon(
-                    onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      '/roles',
-                      (route) => false,
-                    ),
-                    icon: const Icon(Icons.home),
-                    label: const Text('Back to guided tool'),
-                  ),
+                const SizedBox(height: 4),
+                Text(
+                  text,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

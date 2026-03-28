@@ -48,7 +48,7 @@ void main() {
       );
     });
 
-    testWidgets('Should display info section', (WidgetTester tester) async {
+    testWidgets('Should display screen header', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: CategoriesScreen(),
@@ -57,7 +57,7 @@ void main() {
 
       await tester.pumpAndSettle();
 
-      expect(find.text('Reference Library'), findsOneWidget);
+      expect(find.text('CJIS Reference Library'), findsOneWidget);
     });
 
     testWidgets('Categories should be tappable', (WidgetTester tester) async {

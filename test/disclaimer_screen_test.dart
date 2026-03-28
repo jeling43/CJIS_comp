@@ -14,7 +14,7 @@ void main() {
       expect(find.text('CJIS Compliance\nGuidance Tool'), findsOneWidget);
     });
 
-    testWidgets('Should display important disclaimer section',
+    testWidgets('Should display disclaimer message',
         (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
@@ -22,39 +22,10 @@ void main() {
         ),
       );
 
-      expect(find.text('Important Disclaimer'), findsOneWidget);
-    });
-
-    testWidgets('Should display intended audience section',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: DisclaimerScreen(),
-        ),
-      );
-
-      expect(find.text('Intended Audience'), findsOneWidget);
-    });
-
-    testWidgets('Should display purpose section', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: DisclaimerScreen(),
-        ),
-      );
-
-      expect(find.text('Purpose'), findsOneWidget);
-    });
-
-    testWidgets('Should display limitations section',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: DisclaimerScreen(),
-        ),
-      );
-
-      expect(find.text('Limitations'), findsOneWidget);
+      expect(
+          find.text(
+              'This is a guidance tool only. It does not determine compliance or replace official audits.'),
+          findsOneWidget);
     });
 
     testWidgets('Should have continue button', (WidgetTester tester) async {
@@ -64,8 +35,8 @@ void main() {
         ),
       );
 
-      expect(find.text('I Understand - Continue'), findsOneWidget);
-      expect(find.widgetWithText(ElevatedButton, 'I Understand - Continue'),
+      expect(find.text('I Understand — Continue'), findsOneWidget);
+      expect(find.widgetWithText(FilledButton, 'I Understand — Continue'),
           findsOneWidget);
     });
 
