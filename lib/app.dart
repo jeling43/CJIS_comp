@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'screens/disclaimer_screen.dart';
-import 'screens/role_selection_screen.dart';
 import 'screens/domain_selection_screen.dart';
 import 'screens/question_flow_screen.dart';
 import 'screens/categories_screen.dart';
@@ -23,9 +22,8 @@ class CJISComplianceApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        // Primary flow: Disclaimer → Role → Domain → Question
+        // Primary flow: Disclaimer → Domain → Question
         '/': (context) => const DisclaimerScreen(),
-        '/roles': (context) => const RoleSelectionScreen(),
         '/domains': (context) => const DomainSelectionScreen(),
         '/question-flow': (context) => const QuestionFlowScreen(),
         // Secondary reference section (not part of main flow)

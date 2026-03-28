@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import '../data/question_data.dart';
 import '../models/question_models.dart';
 
-/// Two-domain selection screen shown after role selection.
+/// Domain selection screen shown after the disclaimer.
 class DomainSelectionScreen extends StatelessWidget {
   const DomainSelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)?.settings.arguments;
-    final roleId = args is String ? args : null;
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Center(
@@ -39,27 +36,13 @@ class DomainSelectionScreen extends StatelessWidget {
                         Navigator.pushNamed(
                           context,
                           '/question-flow',
-                          arguments: {
-                            'domainId': domain.id,
-                            'roleId': roleId,
-                          },
+                          arguments: {'domainId': domain.id},
                         );
                       },
                     ),
                   ),
                 ),
                 const SizedBox(height: 32),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      '/roles',
-                      (route) => false,
-                    );
-                  },
-                  child: const Text('Change role'),
-                ),
-                const SizedBox(height: 8),
                 TextButton.icon(
                   onPressed: () {
                     Navigator.pushNamed(context, '/categories');

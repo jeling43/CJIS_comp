@@ -1,13 +1,5 @@
 /// Models for the guided question flow system
 
-/// A role the user can identify as
-class UserRole {
-  final String id;
-  final String label;
-
-  const UserRole({required this.id, required this.label});
-}
-
 /// A domain (top-level category) the user can explore
 class Domain {
   final String id;

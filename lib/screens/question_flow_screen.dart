@@ -15,7 +15,6 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
   // Initialised from route arguments
   late DomainFlow _flow;
   late String _domainTitle;
-  String? _roleLabel;
 
   // Flow state
   /// Stack of (questionId, answerIndex) representing history for back navigation
@@ -46,10 +45,8 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
 
     final args = ModalRoute.of(context)?.settings.arguments;
     String domainId;
-    String? roleId;
     if (args is Map) {
       domainId = (args['domainId'] as String?) ?? 'access_control';
-      roleId = args['roleId'] as String?;
     } else {
       domainId = (args is String ? args : null) ?? 'access_control';
     }
@@ -60,14 +57,6 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
       orElse: () => QuestionData.domains.first,
     );
     _domainTitle = domain.title;
-
-    if (roleId != null) {
-      final role = QuestionData.roles.firstWhere(
-        (r) => r.id == roleId,
-        orElse: () => const UserRole(id: '', label: ''),
-      );
-      _roleLabel = role.label.isEmpty ? null : role.label;
-    }
 
     _queue = List.of(_flow.primaryQuestionIds);
     _advance();
@@ -177,24 +166,12 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
           onPressed: _goBack,
           tooltip: 'Back',
         ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
+        title: Text(
               _domainTitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
             ),
-            if (_roleLabel != null)
-              Text(
-                _roleLabel!,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-              ),
-          ],
-        ),
         centerTitle: false,
       ),
       body: Center(
@@ -316,7 +293,7 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
             onPressed: () {
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                '/roles',
+                '/',
                 (_) => false,
               );
             },
