@@ -204,7 +204,7 @@ class _GuidanceFlowScreenState extends State<GuidanceFlowScreen> {
               children: [
                 _buildGuidanceRow(
                   icon: Icons.lightbulb_outline,
-                  label: 'Meaning',
+                  label: 'What this means',
                   text: result!.description,
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -214,7 +214,7 @@ class _GuidanceFlowScreenState extends State<GuidanceFlowScreen> {
                 if (result!.riskAreas.isNotEmpty)
                   _buildGuidanceRow(
                     icon: Icons.warning_amber_outlined,
-                    label: 'Risk',
+                    label: 'Why it matters',
                     text: result!.riskAreas.first,
                     color: Theme.of(context).colorScheme.error,
                   ),
@@ -225,7 +225,7 @@ class _GuidanceFlowScreenState extends State<GuidanceFlowScreen> {
                 if (result!.recommendations.isNotEmpty)
                   _buildGuidanceRow(
                     icon: Icons.arrow_forward_outlined,
-                    label: 'Next step',
+                    label: 'First step',
                     text: result!.recommendations.first,
                     color: Theme.of(context).colorScheme.tertiary,
                   ),

@@ -79,7 +79,13 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
 
   // ─── Diagnostic flag defaults ───────────────────────────────────────────
 
-  static const _defaultNextStep =
+  static const _defaultWhereToLook =
+      'Review documentation or ask the person responsible for this area.';
+
+  static const _defaultWhatToCheck =
+      'Confirm whether a process or policy exists to address this area.';
+
+  static const _defaultFirstStep =
       'Investigate this area and document your findings.';
 
   static const _flagMeanings = <String, String>{
@@ -99,6 +105,7 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
     'Control may not be consistently enforced':
         'Inconsistent controls create exploitable gaps.',
   };
+
 
   /// Handle the user selecting an answer
   void _selectAnswer(int answerIndex) {
@@ -133,7 +140,9 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
               'This area may need further review.',
           risk: _flagRisks[answer.diagnosticFlag!] ??
               'Unresolved uncertainty increases overall risk.',
-          nextStep: _defaultNextStep,
+          whereToLook: _defaultWhereToLook,
+          whatToCheck: _defaultWhatToCheck,
+          firstStep: _defaultFirstStep,
         ),
         diagnosticFlag: answer.diagnosticFlag,
       ));
@@ -536,9 +545,23 @@ class _GuidanceCard extends StatelessWidget {
           ),
           Divider(height: 1, color: scheme.outlineVariant),
           _GuidanceRow(
+            icon: Icons.search_outlined,
+            label: 'Where to look',
+            text: item.whereToLook,
+            color: scheme.secondary,
+          ),
+          Divider(height: 1, color: scheme.outlineVariant),
+          _GuidanceRow(
+            icon: Icons.checklist_outlined,
+            label: 'What to check',
+            text: item.whatToCheck,
+            color: scheme.secondary,
+          ),
+          Divider(height: 1, color: scheme.outlineVariant),
+          _GuidanceRow(
             icon: Icons.arrow_forward_outlined,
-            label: 'What to do next',
-            text: item.nextStep,
+            label: 'First step',
+            text: item.firstStep,
             color: scheme.tertiary,
           ),
           // CJIS reference (shown only in summary, never during questions)
