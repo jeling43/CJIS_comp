@@ -63,7 +63,9 @@ class FlowAnswer {
 class GuidanceItem {
   final String meaning;
   final String risk;
-  final String nextStep;
+  final String whereToLook;
+  final String whatToCheck;
+  final String firstStep;
 
   /// Related CJIS reference shown only in the summary (e.g. "CJIS 5.6.2.2")
   final String? cjisReference;
@@ -71,7 +73,9 @@ class GuidanceItem {
   const GuidanceItem({
     required this.meaning,
     required this.risk,
-    required this.nextStep,
+    required this.whereToLook,
+    required this.whatToCheck,
+    required this.firstStep,
     this.cjisReference,
   });
 }
