@@ -15,6 +15,7 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
   // Initialised from route arguments
   late DomainFlow _flow;
   late String _domainTitle;
+  String? _roleLabel;
 
   // Flow state
   /// Stack of (questionId, answerIndex) representing history for back navigation
@@ -44,7 +45,14 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
     _initialised = true;
 
     final args = ModalRoute.of(context)?.settings.arguments;
-    final domainId = (args is String ? args : null) ?? 'access_control';
+    String domainId;
+    String? roleId;
+    if (args is Map) {
+      domainId = (args['domainId'] as String?) ?? 'access_control';
+      roleId = args['roleId'] as String?;
+    } else {
+      domainId = (args is String ? args : null) ?? 'access_control';
+    }
 
     _flow = QuestionData.getFlow(domainId) ?? QuestionData.accessControlFlow;
     final domain = QuestionData.domains.firstWhere(
@@ -52,6 +60,14 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
       orElse: () => QuestionData.domains.first,
     );
     _domainTitle = domain.title;
+
+    if (roleId != null) {
+      final role = QuestionData.roles.firstWhere(
+        (r) => r.id == roleId,
+        orElse: () => const UserRole(id: '', label: ''),
+      );
+      _roleLabel = role.label.isEmpty ? null : role.label;
+    }
 
     _queue = List.of(_flow.primaryQuestionIds);
     _advance();
@@ -77,35 +93,6 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
     setState(() => _current = question);
   }
 
-  // ─── Diagnostic flag defaults ───────────────────────────────────────────
-
-  static const _defaultWhereToLook =
-      'Review documentation or ask the person responsible for this area.';
-
-  static const _defaultWhatToCheck =
-      'Confirm whether a process or policy exists to address this area.';
-
-  static const _defaultFirstStep =
-      'Investigate this area and document your findings.';
-
-  static const _flagMeanings = <String, String>{
-    'Lack of visibility in this area':
-        'You may not have full visibility into how this area operates.',
-    'Responsibility is unclear':
-        'It is not clear who is responsible for this area.',
-    'Control may not be consistently enforced':
-        'A control may exist but is not being followed consistently.',
-  };
-
-  static const _flagRisks = <String, String>{
-    'Lack of visibility in this area':
-        'Hidden gaps can go unnoticed until an incident or audit.',
-    'Responsibility is unclear':
-        'Without clear ownership, issues are less likely to be addressed.',
-    'Control may not be consistently enforced':
-        'Inconsistent controls create exploitable gaps.',
-  };
-
 
   /// Handle the user selecting an answer
   void _selectAnswer(int answerIndex) {
@@ -124,26 +111,11 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
       wasDone: _done,
     ));
 
-    // Collect diagnostic entry if this answer has guidance or a diagnostic flag
+    // Collect diagnostic entry if this answer has guidance
     if (answer.guidance != null) {
       _collectedDiagnostics.add(DiagnosticEntry(
         questionId: question.id,
         guidance: answer.guidance!,
-        diagnosticFlag: answer.diagnosticFlag,
-      ));
-    } else if (answer.diagnosticFlag != null) {
-      // Flag without guidance — create a minimal diagnostic entry
-      _collectedDiagnostics.add(DiagnosticEntry(
-        questionId: question.id,
-        guidance: GuidanceItem(
-          meaning: _flagMeanings[answer.diagnosticFlag!] ??
-              'This area may need further review.',
-          risk: _flagRisks[answer.diagnosticFlag!] ??
-              'Unresolved uncertainty increases overall risk.',
-          whereToLook: _defaultWhereToLook,
-          whatToCheck: _defaultWhatToCheck,
-          firstStep: _defaultFirstStep,
-        ),
         diagnosticFlag: answer.diagnosticFlag,
       ));
     }
@@ -205,11 +177,23 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
           onPressed: _goBack,
           tooltip: 'Back',
         ),
-        title: Text(
-          _domainTitle,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _domainTitle,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+            if (_roleLabel != null)
+              Text(
+                _roleLabel!,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
               ),
+          ],
         ),
         centerTitle: false,
       ),

@@ -8,6 +8,9 @@ class DomainSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    final roleId = args is String ? args : null;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Center(
@@ -36,7 +39,10 @@ class DomainSelectionScreen extends StatelessWidget {
                         Navigator.pushNamed(
                           context,
                           '/question-flow',
-                          arguments: domain.id,
+                          arguments: {
+                            'domainId': domain.id,
+                            'roleId': roleId,
+                          },
                         );
                       },
                     ),
