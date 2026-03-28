@@ -225,12 +225,26 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
     );
   }
 
+  // ─── Prioritization helpers ─────────────────────────────────────────────
+
+  /// Priority order: control breakdowns > ownership gaps > uncertainty > no flag
+  static const _flagPriority = <String, int>{
+    'Control may not be consistently enforced': 0,
+    'Responsibility is unclear': 1,
+    'Lack of visibility in this area': 2,
+  };
+
+  int _diagnosticPriority(DiagnosticEntry entry) {
+    if (entry.diagnosticFlag == null) return 3;
+    return _flagPriority[entry.diagnosticFlag] ?? 3;
+  }
+
   // ─── Guidance summary ────────────────────────────────────────────────────
 
   Widget _buildGuidanceSummary() {
     final hasEntries = _collectedDiagnostics.isNotEmpty;
     final diagnosticEntries = hasEntries
-        ? _collectedDiagnostics
+        ? List.of(_collectedDiagnostics)..sort((a, b) => _diagnosticPriority(a).compareTo(_diagnosticPriority(b)))
         : [
             DiagnosticEntry(
               questionId: '',
@@ -243,22 +257,23 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          // ── 1. Header ───────────────────────────────────────────────
           Text(
-            'Here\'s what we noticed',
+            'Here are the areas that may need attention',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Based on what you shared:',
+            'These are common areas where issues can occur in real-world environments.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
           ),
           const SizedBox(height: 24),
 
-          // Combined insights (if any)
+          // ── 2. Combined insights (if any) ───────────────────────────
           if (combinedInsights.isNotEmpty) ...[
             ...combinedInsights.map((insight) => Padding(
                   padding: const EdgeInsets.only(bottom: 16),
@@ -267,15 +282,17 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
             const SizedBox(height: 8),
           ],
 
-          // Individual diagnostic cards
+          // ── 3. Individual issue cards ───────────────────────────────
           ...diagnosticEntries.map((entry) => Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: _GuidanceCard(
                   item: entry.guidance,
                   diagnosticFlag: entry.diagnosticFlag,
+                  areaLabel: _domainTitle,
                 ),
               )),
 
+          // ── 4. Navigation ───────────────────────────────────────────
           const SizedBox(height: 32),
           OutlinedButton(
             style: OutlinedButton.styleFrom(
@@ -286,7 +303,7 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('Go back to categories'),
+            child: const Text('Explore another area'),
           ),
           const SizedBox(height: 12),
           TextButton(
@@ -297,7 +314,7 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
                 (_) => false,
               );
             },
-            child: const Text('Start from the beginning'),
+            child: const Text('Start over'),
           ),
         ],
       ),
@@ -450,7 +467,8 @@ class _AnswerButton extends StatelessWidget {
 class _GuidanceCard extends StatelessWidget {
   final GuidanceItem item;
   final String? diagnosticFlag;
-  const _GuidanceCard({required this.item, this.diagnosticFlag});
+  final String areaLabel;
+  const _GuidanceCard({required this.item, this.diagnosticFlag, required this.areaLabel});
 
   @override
   Widget build(BuildContext context) {
@@ -464,33 +482,52 @@ class _GuidanceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Diagnostic flag badge
-          if (diagnosticFlag != null)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                color: scheme.tertiaryContainer.withOpacity(0.5),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.search_outlined, size: 16, color: scheme.onTertiaryContainer),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Noted: $diagnosticFlag',
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color: scheme.onTertiaryContainer,
-                            fontWeight: FontWeight.w600,
-                          ),
-                    ),
-                  ),
-                ],
+          // Area label + optional issue label header
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            decoration: BoxDecoration(
+              color: diagnosticFlag != null
+                  ? scheme.tertiaryContainer.withOpacity(0.5)
+                  : scheme.surfaceContainerHighest.withOpacity(0.4),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
               ),
             ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Area (always shown)
+                Text(
+                  'Area: $areaLabel',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                        letterSpacing: 0.5,
+                      ),
+                ),
+                // Issue Label (if flagged)
+                if (diagnosticFlag != null) ...[
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Icon(Icons.flag_outlined, size: 16, color: scheme.onTertiaryContainer),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          diagnosticFlag!,
+                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                color: scheme.onTertiaryContainer,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ],
+            ),
+          ),
+          // 💡 What this means
           _GuidanceRow(
             icon: Icons.lightbulb_outline,
             label: 'What this means',
@@ -498,20 +535,38 @@ class _GuidanceCard extends StatelessWidget {
             color: scheme.primary,
           ),
           Divider(height: 1, color: scheme.outlineVariant),
+          // ⚠️ Why it matters
           _GuidanceRow(
-            icon: Icons.chat_bubble_outline,
-            label: 'How to explain it',
+            icon: Icons.warning_amber_outlined,
+            label: 'Why it matters',
+            text: item.risk,
+            color: scheme.error,
+          ),
+          Divider(height: 1, color: scheme.outlineVariant),
+          // 🔍 Where to look
+          _GuidanceRow(
+            icon: Icons.search_outlined,
+            label: 'Where to look',
             text: item.whereToLook,
             color: scheme.secondary,
           ),
           Divider(height: 1, color: scheme.outlineVariant),
+          // ✅ What to check
+          _GuidanceRow(
+            icon: Icons.checklist_outlined,
+            label: 'What to check',
+            text: item.whatToCheck,
+            color: scheme.secondary,
+          ),
+          Divider(height: 1, color: scheme.outlineVariant),
+          // ➡️ First step
           _GuidanceRow(
             icon: Icons.arrow_forward_outlined,
-            label: 'Where to start',
+            label: 'First step',
             text: item.firstStep,
             color: scheme.tertiary,
           ),
-          // CJIS reference (shown only in summary, never during questions)
+          // 📋 CJIS Reference (shown only in summary, never during questions)
           if (item.cjisReference != null) ...[
             Divider(height: 1, color: scheme.outlineVariant),
             Padding(
@@ -548,23 +603,23 @@ class _CombinedInsightCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: scheme.tertiaryContainer.withOpacity(0.4),
+        color: scheme.errorContainer.withOpacity(0.35),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: scheme.tertiary.withOpacity(0.3)),
+        border: Border.all(color: scheme.error.withOpacity(0.3), width: 1.5),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.insights, size: 22, color: scheme.tertiary),
+          Icon(Icons.priority_high_rounded, size: 24, color: scheme.error),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Something we noticed across your answers',
+                  'COMBINED INSIGHT',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: scheme.tertiary,
+                        color: scheme.error,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.8,
                       ),
