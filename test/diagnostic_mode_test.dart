@@ -258,8 +258,12 @@ void main() {
                   reason: 'meaning (What this means) must be non-empty');
               expect(g.risk, isNotEmpty,
                   reason: 'risk (Why it matters) must be non-empty');
-              expect(g.nextStep, isNotEmpty,
-                  reason: 'nextStep (What to do next) must be non-empty');
+              expect(g.whereToLook, isNotEmpty,
+                  reason: 'whereToLook (Where to look) must be non-empty');
+              expect(g.whatToCheck, isNotEmpty,
+                  reason: 'whatToCheck (What to check) must be non-empty');
+              expect(g.firstStep, isNotEmpty,
+                  reason: 'firstStep (First step) must be non-empty');
             }
           }
         }
@@ -272,7 +276,9 @@ void main() {
         guidance: GuidanceItem(
           meaning: 'Test meaning',
           risk: 'Test risk',
-          nextStep: 'Test next step',
+          whereToLook: 'Test where to look',
+          whatToCheck: 'Test what to check',
+          firstStep: 'Test first step',
           cjisReference: 'CJIS 5.5.2',
         ),
         diagnosticFlag: 'Lack of visibility in this area',
@@ -335,8 +341,8 @@ void main() {
                   reason: 'meaning should be 1–2 sentences');
               expect(g.risk.split('.').length, lessThanOrEqualTo(4),
                   reason: 'risk should be 1–2 sentences');
-              expect(g.nextStep.split('.').length, lessThanOrEqualTo(4),
-                  reason: 'nextStep should be 1–2 sentences');
+              expect(g.firstStep.split('.').length, lessThanOrEqualTo(4),
+                  reason: 'firstStep should be 1–2 sentences');
             }
           }
         }
@@ -354,7 +360,7 @@ void main() {
             if (answer.guidance != null) {
               final g = answer.guidance!;
               final allText =
-                  '${g.meaning} ${g.risk} ${g.nextStep}'.toLowerCase();
+                  '${g.meaning} ${g.risk} ${g.firstStep}'.toLowerCase();
               for (final term in forbidden) {
                 expect(allText.contains(term), isFalse,
                     reason:

@@ -6,8 +6,6 @@ import 'screens/question_flow_screen.dart';
 import 'screens/categories_screen.dart';
 import 'screens/category_detail_screen.dart';
 import 'screens/guidance_flow_screen.dart';
-import 'screens/access_control_entry_screen.dart';
-import 'screens/access_control_flow_screen.dart';
 
 class CJISComplianceApp extends StatelessWidget {
   const CJISComplianceApp({super.key});
@@ -34,8 +32,6 @@ class CJISComplianceApp extends StatelessWidget {
         '/categories': (context) => const CategoriesScreen(),
         '/category-detail': (context) => const CategoryDetailScreen(),
         '/guidance-flow': (context) => const GuidanceFlowScreen(),
-        '/access-control': (context) => const AccessControlEntryScreen(),
-        '/access-control-flow': (context) => const AccessControlFlowScreen(),
       },
     );
   }

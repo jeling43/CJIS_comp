@@ -116,6 +116,14 @@ class QuestionData {
             text: 'Not sure',
             diagnosticFlag: 'Lack of visibility in this area',
             followUpQuestionId: 'ac_b1',
+            guidance: GuidanceItem(
+              meaning: 'Uncertainty about shared account usage suggests account management may not be tracked.',
+              risk: 'Untracked shared accounts create accountability gaps that are difficult to uncover.',
+              whereToLook: 'Check with IT for a current list of user accounts and how they are assigned.',
+              whatToCheck: 'Look for any accounts that appear to be used by more than one person.',
+              firstStep: 'Ask IT whether shared accounts exist and, if so, who is responsible for each.',
+              cjisReference: 'CJIS 5.5.2',
+            ),
           ),
         ],
       ),
@@ -175,6 +183,14 @@ class QuestionData {
             text: 'Not sure',
             diagnosticFlag: 'Lack of visibility in this area',
             followUpQuestionId: 'ac_b2',
+            guidance: GuidanceItem(
+              meaning: 'Uncertainty about excess access suggests permissions may not be actively managed.',
+              risk: 'Unreviewed permissions allow access to accumulate beyond what roles require.',
+              whereToLook: 'Review any existing role or permission documentation with your IT team.',
+              whatToCheck: 'Look for users with access that goes beyond what their daily job requires.',
+              firstStep: 'Ask IT to pull a current permission report so you can review who has access to what.',
+              cjisReference: 'CJIS 5.5.2.1',
+            ),
           ),
         ],
       ),
@@ -234,6 +250,14 @@ class QuestionData {
             text: 'Not sure',
             diagnosticFlag: 'Lack of visibility in this area',
             followUpQuestionId: 'ac_b3',
+            guidance: GuidanceItem(
+              meaning: 'Not knowing whether accounts are removed when staff leave suggests no off-boarding process exists.',
+              risk: 'Former employee accounts left active create an unauthorized access risk.',
+              whereToLook: 'Compare HR departure records against the list of currently active accounts.',
+              whatToCheck: 'Look for active accounts belonging to people who no longer work at the agency.',
+              firstStep: 'Ask IT to cross-reference active accounts with current staff to identify any orphaned accounts.',
+              cjisReference: 'CJIS 5.5.2.3',
+            ),
           ),
         ],
       ),
@@ -446,6 +470,14 @@ class QuestionData {
             text: 'Not sure',
             diagnosticFlag: 'Lack of visibility in this area',
             followUpQuestionId: 'mfa_b1',
+            guidance: GuidanceItem(
+              meaning: 'Uncertainty about MFA coverage scope suggests the policy may not be clearly documented.',
+              risk: 'Gaps in MFA coverage leave accounts protected only by a password.',
+              whereToLook: 'Ask IT for documentation covering which users and systems require MFA.',
+              whatToCheck: 'Look for any user groups or system roles that may be exempt from MFA requirements.',
+              firstStep: 'Request a complete list of who is and is not subject to MFA requirements.',
+              cjisReference: 'CJIS 5.6.2.2',
+            ),
           ),
         ],
       ),
@@ -496,6 +528,14 @@ class QuestionData {
             text: 'Not sure',
             diagnosticFlag: 'Lack of visibility in this area',
             followUpQuestionId: 'mfa_b2',
+            guidance: GuidanceItem(
+              meaning: 'Uncertainty about password sharing suggests no clear prohibition or enforcement exists.',
+              risk: 'Shared passwords eliminate individual accountability and undermine authentication controls.',
+              whereToLook: 'Review your current acceptable use and password policies.',
+              whatToCheck: 'Confirm whether the policy explicitly prohibits sharing credentials and whether it is enforced.',
+              firstStep: 'Ask staff and IT whether sharing passwords is occurring and document the findings.',
+              cjisReference: 'CJIS 5.6.2.1',
+            ),
           ),
         ],
       ),
@@ -590,6 +630,14 @@ class QuestionData {
             text: 'Not sure',
             diagnosticFlag: 'Lack of visibility in this area',
             followUpQuestionId: 'mfa_b3',
+            guidance: GuidanceItem(
+              meaning: 'Uncertainty about internal MFA requirements suggests authentication policy may not cover all access paths.',
+              risk: 'If internal access does not require MFA, any compromised internal device becomes a direct entry point.',
+              whereToLook: 'Review authentication configurations for internally accessible CJIS systems.',
+              whatToCheck: 'Confirm whether any internal application allows login with only a username and password.',
+              firstStep: 'Ask IT to confirm which internal systems enforce MFA and which do not.',
+              cjisReference: 'CJIS 5.6.2.2',
+            ),
           ),
         ],
       ),
@@ -663,14 +711,10 @@ class QuestionData {
 
   // ─── Lookup helpers ───────────────────────────────────────────────────────
 
-  static DomainFlow? getFlow(String domainId) {
-    switch (domainId) {
-      case 'access_control':
-        return accessControlFlow;
-      case 'auth_mfa':
-        return authMfaFlow;
-      default:
-        return null;
-    }
-  }
+  static final Map<String, DomainFlow> _flows = {
+    'access_control': accessControlFlow,
+    'auth_mfa': authMfaFlow,
+  };
+
+  static DomainFlow? getFlow(String domainId) => _flows[domainId];
 }
