@@ -45,7 +45,11 @@ class DomainSelectionScreen extends StatelessWidget {
                 const SizedBox(height: 32),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/roles');
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/roles',
+                      (route) => false,
+                    );
                   },
                   child: const Text('Change role'),
                 ),
