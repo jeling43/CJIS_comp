@@ -244,14 +244,14 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Here\'s what came up',
+            'Here\'s what we noticed',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Based on your answers:',
+            'Based on what you shared:',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -286,7 +286,7 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('Explore another area'),
+            child: const Text('Go back to categories'),
           ),
           const SizedBox(height: 12),
           TextButton(
@@ -297,7 +297,7 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
                 (_) => false,
               );
             },
-            child: const Text('Start over'),
+            child: const Text('Start from the beginning'),
           ),
         ],
       ),
@@ -469,7 +469,7 @@ class _GuidanceCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
-                color: scheme.errorContainer.withOpacity(0.5),
+                color: scheme.tertiaryContainer.withOpacity(0.5),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(16),
                   topRight: Radius.circular(16),
@@ -477,14 +477,14 @@ class _GuidanceCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.flag_outlined, size: 16, color: scheme.error),
+                  Icon(Icons.search_outlined, size: 16, color: scheme.onTertiaryContainer),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      diagnosticFlag!,
+                      'Noted: $diagnosticFlag',
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color: scheme.error,
-                            fontWeight: FontWeight.w700,
+                            color: scheme.onTertiaryContainer,
+                            fontWeight: FontWeight.w600,
                           ),
                     ),
                   ),
@@ -499,29 +499,15 @@ class _GuidanceCard extends StatelessWidget {
           ),
           Divider(height: 1, color: scheme.outlineVariant),
           _GuidanceRow(
-            icon: Icons.warning_amber_outlined,
-            label: 'Why it matters',
-            text: item.risk,
-            color: scheme.error,
-          ),
-          Divider(height: 1, color: scheme.outlineVariant),
-          _GuidanceRow(
-            icon: Icons.search_outlined,
-            label: 'Where to look',
+            icon: Icons.chat_bubble_outline,
+            label: 'How to explain it',
             text: item.whereToLook,
             color: scheme.secondary,
           ),
           Divider(height: 1, color: scheme.outlineVariant),
           _GuidanceRow(
-            icon: Icons.checklist_outlined,
-            label: 'What to check',
-            text: item.whatToCheck,
-            color: scheme.secondary,
-          ),
-          Divider(height: 1, color: scheme.outlineVariant),
-          _GuidanceRow(
             icon: Icons.arrow_forward_outlined,
-            label: 'First step',
+            label: 'Where to start',
             text: item.firstStep,
             color: scheme.tertiary,
           ),
@@ -576,7 +562,7 @@ class _CombinedInsightCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Combined insight',
+                  'Something we noticed across your answers',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: scheme.tertiary,
                         fontWeight: FontWeight.w700,

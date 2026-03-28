@@ -208,27 +208,17 @@ class _GuidanceFlowScreenState extends State<GuidanceFlowScreen> {
                   text: result!.description,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                Divider(
-                    height: 1,
-                    color: Theme.of(context).colorScheme.outlineVariant),
-                if (result!.riskAreas.isNotEmpty)
-                  _buildGuidanceRow(
-                    icon: Icons.warning_amber_outlined,
-                    label: 'Why it matters',
-                    text: result!.riskAreas.first,
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                if (result!.riskAreas.isNotEmpty)
+                if (result!.recommendations.isNotEmpty) ...[
                   Divider(
                       height: 1,
                       color: Theme.of(context).colorScheme.outlineVariant),
-                if (result!.recommendations.isNotEmpty)
                   _buildGuidanceRow(
                     icon: Icons.arrow_forward_outlined,
-                    label: 'First step',
+                    label: 'Where to start',
                     text: result!.recommendations.first,
                     color: Theme.of(context).colorScheme.tertiary,
                   ),
+                ],
               ],
             ),
           ),
@@ -251,12 +241,12 @@ class _GuidanceFlowScreenState extends State<GuidanceFlowScreen> {
                   borderRadius: BorderRadius.circular(12)),
             ),
             onPressed: _restart,
-            child: const Text('Try again'),
+            child: const Text('Try a different path'),
           ),
           const SizedBox(height: 12),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Back'),
+            child: const Text('Back to category'),
           ),
         ],
       ),
