@@ -229,9 +229,9 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
 
   /// Priority order: control breakdowns > ownership gaps > uncertainty > no flag
   static const _flagPriority = <String, int>{
-    'Control may not be consistently enforced': 0,
-    'Responsibility is unclear': 1,
-    'Lack of visibility in this area': 2,
+    DiagnosticFlags.controlNotEnforced: 0,
+    DiagnosticFlags.responsibilityUnclear: 1,
+    DiagnosticFlags.lackOfVisibility: 2,
   };
 
   int _diagnosticPriority(DiagnosticEntry entry) {
@@ -243,14 +243,20 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
 
   Widget _buildGuidanceSummary() {
     final hasEntries = _collectedDiagnostics.isNotEmpty;
+
     final diagnosticEntries = hasEntries
-        ? List.of(_collectedDiagnostics)..sort((a, b) => _diagnosticPriority(a).compareTo(_diagnosticPriority(b)))
+        ? List.of(_collectedDiagnostics)
         : [
             DiagnosticEntry(
               questionId: '',
               guidance: _flow.defaultGuidance,
             ),
           ];
+    // Sort by severity: control breakdowns first, then ownership gaps, then uncertainty
+    diagnosticEntries.sort(
+      (a, b) => _diagnosticPriority(a).compareTo(_diagnosticPriority(b)),
+    );
+
     final combinedInsights = hasEntries ? _getMatchingCombinedInsights() : <String>[];
 
     return SingleChildScrollView(
