@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/question_models.dart';
+import '../models/results_models.dart';
 import '../data/question_data.dart';
 
 // ─── Entry point ─────────────────────────────────────────────────────────────
@@ -152,6 +153,110 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
     return matched;
   }
 
+  // ─── Results data builder ─────────────────────────────────────────────────
+
+  /// Derive [ResultsData] from collected diagnostics for the results page.
+  ResultsData _buildResultsData() {
+    final highRisk = _collectedDiagnostics
+        .where((d) => d.diagnosticFlag != 'Lack of visibility in this area')
+        .length;
+    final uncertain = _collectedDiagnostics
+        .where((d) => d.diagnosticFlag == 'Lack of visibility in this area')
+        .length;
+
+    RiskLevel riskLevel;
+    if (highRisk >= 3) {
+      riskLevel = RiskLevel.high;
+    } else if (highRisk >= 1) {
+      riskLevel = RiskLevel.moderate;
+    } else {
+      riskLevel = RiskLevel.low;
+    }
+
+    ConfidenceLevel confidenceLevel;
+    if (uncertain >= 3) {
+      confidenceLevel = ConfidenceLevel.low;
+    } else if (uncertain >= 1) {
+      confidenceLevel = ConfidenceLevel.moderate;
+    } else {
+      confidenceLevel = ConfidenceLevel.high;
+    }
+
+    final totalQuestions = _flow.totalPrimarySteps;
+    // Count primary questions answered from history
+    final answered = _history
+        .where((h) => _flow.questions[h.questionId]?.isPrimary ?? false)
+        .length;
+    // If flow is done, all primary questions were answered
+    final questionsAnswered = _done ? totalQuestions : answered;
+
+    final domainResult = DomainResult(
+      domainId: _flow.domainId,
+      title: _domainTitle,
+      icon: QuestionData.domains
+          .firstWhere((d) => d.id == _flow.domainId,
+              orElse: () => QuestionData.domains.first)
+          .icon,
+      highRiskConditions: highRisk,
+      uncertainResponses: uncertain,
+      riskLevel: riskLevel,
+      confidenceLevel: confidenceLevel,
+      questionsAnswered: questionsAnswered,
+      totalQuestions: totalQuestions,
+    );
+
+    // Map confidence / risk to 0–1 scale for scatter plot
+    double confidenceValue;
+    switch (confidenceLevel) {
+      case ConfidenceLevel.low:
+        confidenceValue = 0.2;
+      case ConfidenceLevel.moderate:
+        confidenceValue = 0.55;
+      case ConfidenceLevel.high:
+        confidenceValue = 0.85;
+    }
+    double riskValue;
+    switch (riskLevel) {
+      case RiskLevel.low:
+        riskValue = 0.15;
+      case RiskLevel.moderate:
+        riskValue = 0.55;
+      case RiskLevel.high:
+        riskValue = 0.85;
+    }
+
+    // Derive failure patterns from diagnostics
+    final patternCounts = <String, List<DiagnosticEntry>>{};
+    for (final d in _collectedDiagnostics) {
+      final key = d.diagnosticFlag ?? d.guidance.meaning;
+      patternCounts.putIfAbsent(key, () => []).add(d);
+    }
+
+    final failurePatterns = patternCounts.entries.map((e) {
+      final first = e.value.first;
+      return FailurePatternDetail(
+        pattern: e.key,
+        explanation: first.guidance.meaning,
+        whyItMatters: first.guidance.risk,
+        firstStep: first.guidance.firstStep,
+        occurrences: e.value.length,
+      );
+    }).toList();
+
+    return ResultsData(
+      domainResults: [domainResult],
+      failurePatterns: failurePatterns,
+      confidenceRiskPoints: [
+        ConfidenceRiskPoint(
+          domainId: _flow.domainId,
+          label: _domainTitle,
+          confidence: confidenceValue,
+          risk: riskValue,
+        ),
+      ],
+    );
+  }
+
   // ─── Build ──────────────────────────────────────────────────────────────
 
   @override
@@ -277,6 +382,23 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
               )),
 
           const SizedBox(height: 32),
+          FilledButton.icon(
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+            ),
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                '/results',
+                arguments: _buildResultsData(),
+              );
+            },
+            icon: const Icon(Icons.dashboard_outlined, size: 18),
+            label: const Text('View Results Overview'),
+          ),
+          const SizedBox(height: 12),
           OutlinedButton(
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
