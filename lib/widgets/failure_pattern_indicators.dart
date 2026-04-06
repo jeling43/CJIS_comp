@@ -25,7 +25,7 @@ class FailurePatternIndicators extends StatelessWidget {
     }
 
     final maxOccurrences =
-        patterns.fold<int>(1, (max, p) => p.occurrences > max ? p.occurrences : max);
+        patterns.fold<int>(0, (max, p) => p.occurrences > max ? p.occurrences : max);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -49,7 +49,7 @@ class FailurePatternIndicators extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 12),
             child: _FailurePatternCard(
               pattern: p,
-              barFraction: p.occurrences / maxOccurrences,
+              barFraction: maxOccurrences > 0 ? p.occurrences / maxOccurrences : 0,
             ),
           ),
         ),

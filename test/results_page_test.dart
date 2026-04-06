@@ -186,7 +186,7 @@ void main() {
                 .toLowerCase();
         for (final term in forbidden) {
           expect(allText.contains(term), isFalse,
-              reason: 'Failure pattern "$fp.pattern" should not contain "$term"');
+              reason: 'Failure pattern "${fp.pattern}" should not contain "$term"');
         }
       }
     });

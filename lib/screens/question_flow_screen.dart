@@ -183,8 +183,12 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
     }
 
     final totalQuestions = _flow.totalPrimarySteps;
-    // Questions answered = those in history that were primary questions
-    final answered = totalQuestions; // flow completed
+    // Count primary questions answered from history
+    final answered = _history
+        .where((h) => _flow.questions[h.questionId]?.isPrimary ?? false)
+        .length;
+    // If flow is done, all primary questions were answered
+    final questionsAnswered = _done ? totalQuestions : answered;
 
     final domainResult = DomainResult(
       domainId: _flow.domainId,
@@ -197,7 +201,7 @@ class _QuestionFlowScreenState extends State<QuestionFlowScreen> {
       uncertainResponses: uncertain,
       riskLevel: riskLevel,
       confidenceLevel: confidenceLevel,
-      questionsAnswered: answered,
+      questionsAnswered: questionsAnswered,
       totalQuestions: totalQuestions,
     );
 
