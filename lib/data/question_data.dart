@@ -921,6 +921,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Some policies exist but are not consistently enforced',
+            followUpQuestionId: 'mfa_b7',
             diagnosticFlag: 'Control may not be consistently enforced',
             guidance: GuidanceItem(
               meaning: 'Inconsistently enforced password policies leave gaps that attackers can exploit.',
@@ -933,6 +934,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Default or simple passwords are still used on some systems',
+            followUpQuestionId: 'mfa_b7',
             diagnosticFlag: 'Control may not be consistently enforced',
             guidance: GuidanceItem(
               meaning: 'Default and simple passwords are among the most exploited vulnerabilities in any environment.',
@@ -945,6 +947,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
+            followUpQuestionId: 'mfa_b7',
             diagnosticFlag: 'Lack of visibility in this area',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about password management suggests policies may not be defined or enforced.',
@@ -952,6 +955,42 @@ class QuestionData {
               whereToLook: 'Check whether a written password complexity policy exists.',
               whatToCheck: 'Confirm whether password complexity rules are enforced automatically by each system.',
               firstStep: 'Audit password configurations on critical systems and implement an enforced policy.',
+              cjisReference: 'CJIS 5.6.2.1',
+            ),
+          ),
+        ],
+      ),
+
+      // ── Branch: password policy enforcement gaps ──────────────────────
+      'mfa_b7': const FlowQuestion(
+        id: 'mfa_b7',
+        text:
+            'Which specific systems have the weakest password enforcement, and who is responsible for remediating those gaps?',
+        answers: [
+          FlowAnswer(
+            text: 'We know which systems are weaker and have a plan to address them',
+          ),
+          FlowAnswer(
+            text: 'We have not inventoried which systems have weaker settings',
+            diagnosticFlag: 'Lack of visibility in this area',
+            guidance: GuidanceItem(
+              meaning: 'Without knowing which systems have weak password settings, remediation cannot be targeted.',
+              risk: 'Unidentified weak points remain exploitable indefinitely.',
+              whereToLook: 'Ask IT for a per-system breakdown of password policy configurations.',
+              whatToCheck: 'Confirm whether each system enforces the same minimum complexity, reuse, and expiration rules.',
+              firstStep: 'Create an inventory of password enforcement settings across all CJIS-connected systems.',
+              cjisReference: 'CJIS 5.6.2.1',
+            ),
+          ),
+          FlowAnswer(
+            text: 'Not sure',
+            diagnosticFlag: 'Responsibility is unclear',
+            guidance: GuidanceItem(
+              meaning: 'Uncertainty about who owns password policy enforcement suggests no one is actively managing it.',
+              risk: 'Without a responsible owner, password policy gaps persist and worsen over time.',
+              whereToLook: 'Determine whether IT, security, or management is responsible for password policy enforcement.',
+              whatToCheck: 'Confirm that a specific person or team is accountable for ensuring password policies are applied consistently.',
+              firstStep: 'Assign ownership for password policy enforcement and schedule a system-by-system audit.',
               cjisReference: 'CJIS 5.6.2.1',
             ),
           ),
@@ -1183,6 +1222,7 @@ class QuestionData {
           FlowAnswer(text: 'Yes, they are monitored and reviewed regularly'),
           FlowAnswer(
             text: 'Logs exist but no one actively reviews them',
+            followUpQuestionId: 'mfa_b8',
             guidance: GuidanceItem(
               meaning: 'Unreviewed security logs provide no protection — they only help after a breach is already discovered.',
               risk: 'Attackers rely on the fact that failed attempts and anomalies often go unnoticed.',
@@ -1194,6 +1234,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'No monitoring is in place',
+            followUpQuestionId: 'mfa_b8',
             diagnosticFlag: 'Control may not be consistently enforced',
             guidance: GuidanceItem(
               meaning: 'Without login monitoring, unauthorized access attempts are invisible to your team.',
@@ -1206,6 +1247,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
+            followUpQuestionId: 'mfa_b8',
             diagnosticFlag: 'Lack of visibility in this area',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about monitoring suggests authentication events may not be tracked or reviewed.',
@@ -1213,6 +1255,42 @@ class QuestionData {
               whereToLook: 'Ask IT whether authentication logs are generated and whether anyone reviews them.',
               whatToCheck: 'Look for any alerting rules, dashboards, or review schedules related to login activity.',
               firstStep: 'Confirm with IT whether authentication monitoring exists and who is responsible for it.',
+              cjisReference: 'CJIS 5.6.2.1',
+            ),
+          ),
+        ],
+      ),
+
+      // ── Branch: incident response for authentication anomalies ─────────
+      'mfa_b8': const FlowQuestion(
+        id: 'mfa_b8',
+        text:
+            'If a suspicious login pattern were detected today — such as repeated failures or logins from an unusual location — what would happen next?',
+        answers: [
+          FlowAnswer(
+            text: 'There is a defined incident response process that would be triggered',
+          ),
+          FlowAnswer(
+            text: 'Someone would probably notice eventually but there is no formal process',
+            diagnosticFlag: 'Control may not be consistently enforced',
+            guidance: GuidanceItem(
+              meaning: 'Without a defined response process, detected anomalies may not be acted on in time.',
+              risk: 'Delayed response to authentication anomalies gives attackers time to establish persistent access.',
+              whereToLook: 'Review your incident response plan for authentication-related events.',
+              whatToCheck: 'Confirm whether specific steps, escalation contacts, and timelines are defined for login anomalies.',
+              firstStep: 'Create a simple response playbook for authentication anomalies with clear escalation steps.',
+              cjisReference: 'CJIS 5.6.2.1',
+            ),
+          ),
+          FlowAnswer(
+            text: 'Not sure',
+            diagnosticFlag: 'Responsibility is unclear',
+            guidance: GuidanceItem(
+              meaning: 'Uncertainty about incident response for authentication events suggests no one owns this process.',
+              risk: 'Without a clear response owner, suspicious activity can go unaddressed until damage occurs.',
+              whereToLook: 'Ask IT and management who would be notified if a suspicious login were detected.',
+              whatToCheck: 'Confirm whether anyone is assigned to respond to authentication alerts and what their process is.',
+              firstStep: 'Designate a person or team responsible for responding to authentication anomalies and document the process.',
               cjisReference: 'CJIS 5.6.2.1',
             ),
           ),
