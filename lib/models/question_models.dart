@@ -72,6 +72,16 @@ class GuidanceItem {
   });
 }
 
+/// Standard diagnostic flag labels used across the app
+class DiagnosticFlags {
+  DiagnosticFlags._();
+
+  static const String lackOfVisibility = 'Lack of visibility in this area';
+  static const String responsibilityUnclear = 'Responsibility is unclear';
+  static const String controlNotEnforced =
+      'Control may not be consistently enforced';
+}
+
 /// A diagnostic entry collected during the flow
 class DiagnosticEntry {
   final String questionId;
