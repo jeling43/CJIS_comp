@@ -11,6 +11,10 @@ class QuestionData {
   static const List<Domain> domains = [
     Domain(id: 'access_control', title: 'Access Control', icon: '🔐'),
     Domain(id: 'auth_mfa', title: 'Authentication & MFA', icon: '🔑'),
+    Domain(id: 'data_storage', title: 'Data Storage & Encryption', icon: '💾'),
+    Domain(id: 'user_roles', title: 'User Roles & Least Privilege', icon: '👤'),
+    Domain(id: 'cloud_vendor', title: 'Cloud & Vendor Considerations', icon: '☁️'),
+    Domain(id: 'training', title: 'Training & Personnel Security', icon: '🎓'),
   ];
 
   // ─── Access Control Flow ─────────────────────────────────────────────────
