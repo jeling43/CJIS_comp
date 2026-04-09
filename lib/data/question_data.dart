@@ -95,7 +95,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'ac_b1a',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Account uniqueness may not be verified',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about shared accounts suggests account management may not be documented or centrally tracked.',
               risk: 'Undocumented account practices make audits and incident response significantly harder.',
@@ -129,7 +129,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Shared account actions may not be attributable',
             guidance: GuidanceItem(
               meaning: 'If you cannot describe how shared account actions are attributed, the control likely does not exist.',
               risk: 'Unattributed actions on shared accounts undermine accountability and audit readiness.',
@@ -167,7 +167,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'ac_b1',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Individual action tracking may not be in place',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about action tracking suggests audit logs may not capture individual user identity.',
               risk: 'Untracked actions on shared systems create accountability gaps that are difficult to resolve after the fact.',
@@ -239,7 +239,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'ac_b2',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Access request process may not be defined',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about access request processes suggests no consistent procedure is in place.',
               risk: 'Without a defined process, access may be granted inconsistently and without documentation.',
@@ -273,7 +273,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Informal access grants may not be documented',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about documentation suggests informal grants may not be tracked at all.',
               risk: 'Untracked access changes accumulate over time and become difficult to audit.',
@@ -311,7 +311,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'ac_b3',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Off-boarding process may not be defined',
             guidance: GuidanceItem(
               meaning: 'Not knowing the deactivation timeline suggests no formal off-boarding process exists.',
               risk: 'Without a defined timeline, former employee accounts could remain active indefinitely.',
@@ -344,7 +344,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Orphaned accounts may not be detected',
             guidance: GuidanceItem(
               meaning: 'Not knowing whether orphaned accounts persist suggests no monitoring or verification exists.',
               risk: 'Orphaned accounts that go undetected could be used for unauthorized access at any time.',
@@ -382,7 +382,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'ac_b4',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Device access controls may not be defined',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about device access suggests device-level controls may not be defined or enforced.',
               risk: 'Without clear device policies, CJIS data could be accessed from unsecured endpoints.',
@@ -418,7 +418,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Endpoint security on shared devices may not be configured',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about device controls suggests endpoint security may not be configured or monitored.',
               risk: 'Without visibility into device-level protections, CJIS data may be exposed on unsecured endpoints.',
@@ -455,7 +455,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'ac_b5',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Access tracking may not be consistently enforced',
             guidance: GuidanceItem(
               meaning: 'If you are unsure whether access is tracked, it may not be consistently enforced.',
               risk: 'Inconsistent tracking creates blind spots in your access management posture.',
@@ -489,7 +489,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Unauthorized access changes may go undetected',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about detection capability suggests unauthorized changes could go unnoticed.',
               risk: 'Without visibility into access changes, informal grants accumulate unchecked.',
@@ -527,7 +527,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure or reviews do not happen',
             followUpQuestionId: 'ac_b6',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Access reviews may not be happening',
             guidance: GuidanceItem(
               meaning: 'No access review process means permissions are likely never validated after initial grant.',
               risk: 'Unreviewed access is one of the most common CJIS audit findings.',
@@ -560,7 +560,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Excess access remediation process may not be defined',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about the remediation process suggests no defined procedure exists for handling excess access.',
               risk: 'Without a defined response, discovered access issues may not be resolved consistently.',
@@ -598,7 +598,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'ac_b7',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'System inventory may be incomplete',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about which systems are centrally managed suggests a gap in your system inventory.',
               risk: 'Unknown or untracked systems with CJIS access represent an unmanaged attack surface.',
@@ -632,7 +632,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Separately managed systems may not be monitored',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about monitoring indicates these systems may be outside your security visibility.',
               risk: 'Systems without monitoring are common entry points in breach investigations.',
@@ -722,7 +722,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'mfa_b1',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Remote MFA coverage may not be fully enforced',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about MFA enforcement suggests the policy may not be consistently applied or documented.',
               risk: 'Gaps in MFA coverage are a top target in credential-based attacks.',
@@ -758,7 +758,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'MFA exceptions may not have been formally approved',
             guidance: GuidanceItem(
               meaning: 'Not knowing how exceptions were approved suggests the review process is informal or absent.',
               risk: 'Unreviewed exceptions may expose high-risk access paths without anyone being aware.',
@@ -796,7 +796,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'mfa_b3',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Internal MFA requirements may not be defined',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about internal MFA requirements suggests authentication policy may not cover all access paths.',
               risk: 'If internal access does not require MFA, any compromised internal device becomes a direct entry point.',
@@ -829,7 +829,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Internal systems may allow access without MFA',
             guidance: GuidanceItem(
               meaning: 'If internal MFA requirements are unclear, the network perimeter may be the only barrier.',
               risk: 'Uncertainty here means an attacker on the internal network may face no second factor.',
@@ -866,7 +866,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'mfa_b2',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Credential sharing policy may not be enforced',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about credential sharing suggests no clear prohibition or enforcement exists.',
               risk: 'Shared credentials eliminate individual accountability and undermine authentication controls.',
@@ -952,7 +952,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'mfa_b7',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Password policy enforcement may not be verified',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about password management suggests policies may not be defined or enforced.',
               risk: 'Without enforcement, weak passwords are likely present across systems.',
@@ -976,7 +976,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'We have not inventoried which systems have weaker settings',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Weak password settings may not be identified',
             guidance: GuidanceItem(
               meaning: 'Without knowing which systems have weak password settings, remediation cannot be targeted.',
               risk: 'Unidentified weak points remain exploitable indefinitely.',
@@ -1026,7 +1026,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'mfa_b4',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Account recovery process may not be defined',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about recovery processes suggests they may not be formally defined.',
               risk: 'Undefined recovery processes are vulnerable to social engineering and impersonation.',
@@ -1061,7 +1061,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Account recovery security may not be evaluated',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about recovery security suggests the process has not been evaluated for exploitation.',
               risk: 'An untested recovery process may be the weakest link in your authentication chain.',
@@ -1099,7 +1099,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'mfa_b5',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Fallback authentication security may not be evaluated',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about fallback methods suggests they may not have been evaluated for security.',
               risk: 'Unknown fallback methods may provide an unintended bypass to primary controls.',
@@ -1132,7 +1132,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Fallback method bypass may not be prevented',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about fallback enforcement suggests users may be able to choose weaker methods.',
               risk: 'If users can self-select authentication methods, the strongest method becomes optional.',
@@ -1170,7 +1170,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'mfa_b6',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Conditional access controls may not be in place',
             guidance: GuidanceItem(
               meaning: 'Uncertainty suggests conditional access policies may not be in place.',
               risk: 'Without conditional access, authentication context cannot be verified.',
@@ -1203,7 +1203,7 @@ class QuestionData {
           ),
           FlowAnswer(
             text: 'Not sure',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Personal device access may not be restricted',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about device types suggests no device management policy may be in place.',
               risk: 'Without device control, CJIS systems may be accessible from compromised endpoints.',
@@ -1252,7 +1252,7 @@ class QuestionData {
           FlowAnswer(
             text: 'Not sure',
             followUpQuestionId: 'mfa_b8',
-            diagnosticFlag: 'Lack of visibility in this area',
+            diagnosticFlag: 'Authentication monitoring may not be active',
             guidance: GuidanceItem(
               meaning: 'Uncertainty about monitoring suggests authentication events may not be tracked or reviewed.',
               risk: 'Without monitoring, you have no way to detect ongoing attacks or credential compromise.',
