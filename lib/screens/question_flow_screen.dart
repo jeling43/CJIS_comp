@@ -745,7 +745,7 @@ class _CombinedInsightCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'COMBINED INSIGHT',
+                  'ACTION REQUIRED',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: scheme.error,
                         fontWeight: FontWeight.w700,
