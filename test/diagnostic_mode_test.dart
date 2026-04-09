@@ -37,9 +37,17 @@ void main() {
                 answer.diagnosticFlag != null) {
               expect(
                 answer.diagnosticFlag,
-                equals('Lack of visibility in this area'),
+                isNotEmpty,
                 reason:
-                    '"Not sure" in "${question.id}" should flag uncertainty',
+                    '"Not sure" in "${question.id}" should have a '
+                    'non-empty topic-specific diagnostic flag',
+              );
+              expect(
+                answer.diagnosticFlag,
+                isNot(equals('Lack of visibility in this area')),
+                reason:
+                    '"Not sure" in "${question.id}" should use a '
+                    'topic-specific flag, not the old generic label',
               );
             }
           }
